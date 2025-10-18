@@ -53,11 +53,11 @@ def legjobb_flexi_ajanlat(lista_ar_alkalom: float, alkalmak: int):
 
 st.set_page_config(page_title="Flexi bérlet ajánló", layout="centered")
 
-st.title("Flexi bérlet ajánló kalkulátor")
+st.title("Flexi bérlet kalkulátor")
 st.markdown("""
 Segít meghatározni, hogy **melyik Flexi bérlet vagy bérletkombináció**
 a legjobb ajánlat egy adott kezeléshez.  
-Add meg a kezelés **listaárát** és az **ajánlott alkalmak számát**:
+Add meg a kezelés **listaárát** és az **alkalmak számát**:
 """)
 
 # Bemenetek
@@ -73,11 +73,12 @@ if st.button("Számolás"):
         st.success("Legjobb ajánlat:")
         col1, col2 = st.columns(2)
         with col1:
-            st.metric("Kombináció", legjobb["Kombináció"])
+            st.metric("Listaáron fizetne", f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " "))
+            st.metric("Flexi ára", f"{int(legjobb['Flexi ára']):,} Ft".replace(",", " "))
             st.metric("Flexi értéke", f"{int(legjobb['Flexi értéke']):,} Ft".replace(",", " "))
             st.metric("Maradék érték", f"{int(legjobb['Maradék érték (Ft)']):,} Ft".replace(",", " "))
         with col2:
-            st.metric("Flexi ára", f"{int(legjobb['Flexi ára']):,} Ft".replace(",", " "))
+            st.metric("Kombináció", legjobb["Kombináció"])
             st.metric("Megtakarítás (Ft)", f"{int(legjobb['Megtakarítás (Ft)']):,} Ft".replace(",", " "))
             st.metric("Megtakarítás (%)", f"{legjobb['Megtakarítás (%)']} %")
 
