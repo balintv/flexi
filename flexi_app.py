@@ -32,8 +32,12 @@ def legjobb_flexi_ajanlat(lista_ar_alkalom: float, alkalmak: int):
                 megtakaritas = teljes_listaar - ossz_ar
                 megtakaritas_szazalek = 1 - (ossz_ar / teljes_listaar)
                 maradek = ossz_ertek - teljes_listaar
+
+                # rendezés a kombináción belül bérlet értéke szerint, csökkenő sorrendben
+                rendezett = sorted(kombinacio, key=lambda b: b["ertek"], reverse=True)
+
                 eredmenyek.append({
-                    "Kombináció": " + ".join(b["nev"] for b in kombinacio),
+                    "Kombináció": " + ".join(b["nev"] for b in rendezett),
                     "Flexi ára": ossz_ar,
                     "Flexi értéke": ossz_ertek,
                     "Listaáron fizetne": teljes_listaar,
