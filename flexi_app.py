@@ -76,11 +76,10 @@ if st.button("Számolás"):
             st.metric("Listaáron fizetne", f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " "))
             st.metric("Flexi ára", f"{int(legjobb['Flexi ára']):,} Ft".replace(",", " "))
             st.metric("Flexi értéke", f"{int(legjobb['Flexi értéke']):,} Ft".replace(",", " "))
-            st.metric("Maradék érték", f"{int(legjobb['Maradék érték (Ft)']):,} Ft".replace(",", " "))
         with col2:
             st.metric("Kombináció", legjobb["Kombináció"])
             st.metric("Megtakarítás (Ft)", f"{int(legjobb['Megtakarítás (Ft)']):,} Ft".replace(",", " "))
-            st.metric("Megtakarítás (%)", f"{legjobb['Megtakarítás (%)']} %")
+            st.metric("Maradék érték", f"{int(legjobb['Maradék érték (Ft)']):,} Ft".replace(",", " "))
 
         st.markdown("---")
         st.subheader("Összes lehetséges kombináció")
