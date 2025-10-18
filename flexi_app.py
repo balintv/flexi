@@ -72,9 +72,9 @@ if st.button("Számolás"):
     else:
         st.success("Legjobb ajánlat:")
         st.metric("Kombináció", legjobb["Kombináció"])
-        st.metric("Listaáron fizetne", f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " "))
         st.metric("Flexi ára", f"{int(legjobb['Flexi ára']):,} Ft".replace(",", " "))
-        st.metric("Megtakarítás (Ft)", f"{int(legjobb['Megtakarítás (Ft)']):,} Ft".replace(",", " "))
+        st.metric("Listaáron fizetne", f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " "))
+        st.metric("Megtakarítás", f"{int(legjobb['Megtakarítás (Ft)']):,} Ft".replace(",", " "))
         st.metric("Flexi értéke", f"{int(legjobb['Flexi értéke']):,} Ft".replace(",", " "))
         st.metric("Maradék érték", f"{int(legjobb['Maradék érték (Ft)']):,} Ft".replace(",", " "))
 
@@ -98,9 +98,9 @@ if st.button("Számolás"):
         for i, sor in top.iterrows():
             st.markdown(f"""
             **{i+1}. {sor['Kombináció']}**
-            - 💰 **Fizetendő ár:** {sor['Bérlet ára összesen (Ft)']:,} Ft  
-            - 🧾 **Listaáras érték:** {sor['Listaáras összeg (Ft)']:,} Ft  
+            - 💰 **Flexi ára:** {sor['Bérlet ára összesen (Ft)']:,} Ft  
+            - 🧾 **Listaáron fizetne:** {sor['Listaáras összeg (Ft)']:,} Ft  
             - 🎯 **Megtakarítás:** {sor['Megtakarítás (Ft)']:,} Ft  
-            - 💸 **Kedvezmény:** {sor['Megtakarítás (%)']} %  
+            - 💸 **Flexi értéke:** {sor['Felhasználható érték (Ft)']} %  
             - 💼 **Maradék érték:** {sor['Maradék felhasználható érték (Ft)']:,} Ft  
             """)
