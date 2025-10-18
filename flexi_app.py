@@ -77,30 +77,3 @@ if st.button("Számolás"):
         st.metric("Megtakarítás", f"{int(legjobb['Megtakarítás (Ft)']):,} Ft".replace(",", " "))
         st.metric("Flexi értéke", f"{int(legjobb['Flexi értéke']):,} Ft".replace(",", " "))
         st.metric("Maradék érték", f"{int(legjobb['Maradék érték (Ft)']):,} Ft".replace(",", " "))
-
-        st.markdown("---")
-        st.subheader("Top 4 legjobb flexi kombináció")
-        top = minden.sort_values(
-            ["berlet_ar_osszesen", "megtakaritas_ft"], ascending=[True, False]
-        ).head(4).reset_index(drop=True)
-
-        top = top.rename(columns={
-            "kombinacio": "Kombináció",
-            "berlet_ar_osszesen": "Bérlet ára összesen (Ft)",
-            "berlet_ertek_osszesen": "Felhasználható érték (Ft)",
-            "lista_aron_fizetne": "Listaáras összeg (Ft)",
-            "megtakaritas_ft": "Megtakarítás (Ft)",
-            "megtakaritas_szazalek": "Megtakarítás (%)",
-            "maradek_felhasznalhato": "Maradék felhasználható érték (Ft)",
-            "osszeg_valtozas_%": "Összegváltozás (%)"
-        })
-
-        for i, sor in top.iterrows():
-            st.markdown(f"""
-            **{i+1}. {sor['Kombináció']}**
-            - 💰 **Flexi ára:** {sor['Bérlet ára összesen (Ft)']:,} Ft  
-            - 🧾 **Listaáron fizetne:** {sor['Listaáras összeg (Ft)']:,} Ft  
-            - 🎯 **Megtakarítás:** {sor['Megtakarítás (Ft)']:,} Ft  
-            - 💸 **Flexi értéke:** {sor['Felhasználható érték (Ft)']} %  
-            - 💼 **Maradék érték:** {sor['Maradék felhasználható érték (Ft)']:,} Ft  
-            """)
