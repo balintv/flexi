@@ -71,16 +71,36 @@ if st.button("Számolás"):
         st.error("Nincs olyan bérlet, ami fedezné az értéket.")
     else:
         st.success("Legjobb ajánlat:")
-        col1, col2 = st.columns(2)
-        with col1:
-            st.metric("Listaáron fizetne", f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " "))
-            st.metric("Flexi ára", f"{int(legjobb['Flexi ára']):,} Ft".replace(",", " "))
-            st.metric("Flexi értéke", f"{int(legjobb['Flexi értéke']):,} Ft".replace(",", " "))
-        with col2:
-            st.metric("Kombináció", legjobb["Kombináció"])
-            st.metric("Megtakarítás (Ft)", f"{int(legjobb['Megtakarítás (Ft)']):,} Ft".replace(",", " "))
-            st.metric("Maradék érték", f"{int(legjobb['Maradék érték (Ft)']):,} Ft".replace(",", " "))
+        st.metric("Kombináció", legjobb["Kombináció"])
+        st.metric("Listaáron fizetne", f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " "))
+        st.metric("Flexi ára", f"{int(legjobb['Flexi ára']):,} Ft".replace(",", " "))
+        st.metric("Megtakarítás (Ft)", f"{int(legjobb['Megtakarítás (Ft)']):,} Ft".replace(",", " "))
+        st.metric("Flexi értéke", f"{int(legjobb['Flexi értéke']):,} Ft".replace(",", " "))
+        st.metric("Maradék érték", f"{int(legjobb['Maradék érték (Ft)']):,} Ft".replace(",", " "))
 
         st.markdown("---")
-        st.subheader("Összes lehetséges kombináció")
-        st.dataframe(minden.reset_index(drop=True), use_container_width=True)
+        st.subheader("Top 4 legjobb flexi kombináció")
+        top = minden.sort_values(
+            ["berlet_ar_osszesen", "megtakaritas_ft"], ascending=[True, False]
+        ).head(4).reset_index(drop=True)
+
+        top = top.rename(columns={
+            "kombinacio": "Kombináció",
+            "berlet_ar_osszesen": "Bérlet ára összesen (Ft)",
+            "berlet_ertek_osszesen": "Felhasználható érték (Ft)",
+            "lista_aron_fizetne": "Listaáras összeg (Ft)",
+            "megtakaritas_ft": "Megtakarítás (Ft)",
+            "megtakaritas_szazalek": "Megtakarítás (%)",
+            "maradek_felhasznalhato": "Maradék felhasználható érték (Ft)",
+            "osszeg_valtozas_%": "Összegváltozás (%)"
+        })
+
+        for i, sor in top.iterrows():
+            st.markdown(f"""
+            **{i+1}. {sor['Kombináció']}**
+            - 💰 **Fizetendő ár:** {sor['Bérlet ára összesen (Ft)']:,} Ft  
+            - 🧾 **Listaáras érték:** {sor['Listaáras összeg (Ft)']:,} Ft  
+            - 🎯 **Megtakarítás:** {sor['Megtakarítás (Ft)']:,} Ft  
+            - 💸 **Kedvezmény:** {sor['Megtakarítás (%)']} %  
+            - 💼 **Maradék érték:** {sor['Maradék felhasználható érték (Ft)']:,} Ft  
+            """)
