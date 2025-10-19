@@ -87,8 +87,8 @@ if st.button("Számolás"):
             st.metric(
                 label="💰 Ajánlat ára",
                 value=f"{flexi_ar:,} Ft".replace(",", " "),
-                delta=f"{megtakaritas:,} Ft megtakarítás".replace(",", " "),
-                delta_color="inverse"  # kisebb ár = zöld
+                delta=f"{megtakaritas:,} Ft".replace(",", " "),
+                delta_color="normal"
             )
 
             flexi_ertek = int(legjobb["Flexi értéke"])
@@ -96,8 +96,8 @@ if st.button("Számolás"):
             st.metric(
                 label="💼 Ajánlat teljes értéke",
                 value=f"{flexi_ertek:,} Ft".replace(",", " "),
-                delta=f"+{maradek:,} Ft levásárolható érték marad a bérletén".replace(",", " "),
-                delta_color="normal"  # plusz = zöld
+                delta=f"{maradek:,} Ft marad a bérletén".replace(",", " "),
+                delta_color="normal"
             )
 
         else:
