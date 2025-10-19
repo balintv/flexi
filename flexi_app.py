@@ -103,28 +103,43 @@ if st.button("Számolás"):
         else:
             # ----- MARKETINGES NÉZET -----
             kombi = legjobb["Kombináció"]
-            flexi_ar = f"{int(legjobb['Flexi ára']):,} Ft".replace(",", " ")
+            flexi_ar_int = int(legjobb["Flexi ára"])
+            lista_ar_int = int(legjobb["Listaáron fizetne"])
             maradek = int(legjobb["Maradék érték (Ft)"])
-            lista_ar = f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " ")
+
+            flexi_ar = f"{flexi_ar_int:,} Ft".replace(",", " ")
+            lista_ar = f"{lista_ar_int:,} Ft".replace(",", " ")
 
             # Ármegjelenítés logikája
-            if int(legjobb["Flexi ára"]) < int(legjobb["Listaáron fizetne"]):
+            if flexi_ar_int < lista_ar_int:
                 # kedvezmény
                 ar_sor = f"~~{lista_ar}~~ → **{flexi_ar}**"
-            elif int(legjobb["Flexi ára"]) == int(legjobb["Listaáron fizetne"]):
+                if maradek > 0:
+                    ajandek_sor = f"+ {maradek:,} Ft levásárolható érték".replace(",", " ")
+                else:
+                    ajandek_sor = ""
+
+            elif flexi_ar_int == lista_ar_int:
                 # nincs kedvezmény
                 ar_sor = f"**{flexi_ar}**"
-            else:
-                # drágább ajánlat
-                ar_sor = f"{lista_ar} → :red[{flexi_ar}]"
+                ajandek_sor = f"+ {maradek:,} Ft levásárolható érték".replace(",", " ") if maradek > 0 else ""
 
-            # Ha van maradék
-            if maradek > 0:
-                ajandek_sor = f"+ {maradek:,} Ft levásárolható érték".replace(",", " ")
             else:
+                # drágább, de értékalapú ajánlat
+                plusz_fizet = flexi_ar_int - lista_ar_int
+                osszes_tobblet = maradek - plusz_fizet
+                plusz_fizet_szoveg = f"{plusz_fizet:,} Ft".replace(",", " ")
+                maradek_szoveg = f"{maradek:,} Ft".replace(",", " ")
+                osszes_tobblet_szoveg = f"{osszes_tobblet:,}".replace(",", " ")
+
+                # új szövegezés
+                ar_sor = (
+                    f"+{plusz_fizet_szoveg} ráfordítással +{maradek_szoveg} értéket kap, "
+                    f"így {osszes_tobblet_szoveg} forintot spórol a következő kezelésein!"
+                )
                 ajandek_sor = ""
 
-            # „Kártya” jellegű blokk
+            # „Kártya” jellegű blokk natív elrendezéssel
             left, mid, right = st.columns([1, 3, 1])
             with mid:
                 st.divider()
@@ -133,3 +148,4 @@ if st.button("Számolás"):
                 if ajandek_sor:
                     st.markdown(f"##### {ajandek_sor}")
                 st.divider()
+
