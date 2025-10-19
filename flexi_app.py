@@ -110,17 +110,17 @@ if st.button("Számolás"):
             # Ármegjelenítés logikája
             if int(legjobb["Flexi ára"]) < int(legjobb["Listaáron fizetne"]):
                 # kedvezmény
-                ar_sor = f"~~{lista_ar}~~ ➡️ **{flexi_ar}**"
+                ar_sor = f"~~{lista_ar}~~ → **{flexi_ar}**"
             elif int(legjobb["Flexi ára"]) == int(legjobb["Listaáron fizetne"]):
                 # nincs kedvezmény
                 ar_sor = f"**{flexi_ar}**"
             else:
                 # drágább ajánlat
-                ar_sor = f"{lista_ar} ➡️ :red[{flexi_ar}]"
+                ar_sor = f"{lista_ar} → :red[{flexi_ar}]"
 
             # Ajándék sor csak ha van maradék
             if maradek > 0:
-                ajandek_sor = f"➕ {maradek:,} Ft értékű 🎁 ajándék kezelés".replace(",", " ")
+                ajandek_sor = f"+ {maradek:,} Ft értékű 🎁 ajándék kezelés".replace(",", " ")
             else:
                 ajandek_sor = ""
 
