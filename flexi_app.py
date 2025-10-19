@@ -101,26 +101,26 @@ if st.button("Számolás"):
             )
 
         else:
-            # ----- MARKETINGES NÉZET (HTML nélkül, natív komponensekkel) -----
+            # ----- MARKETINGES NÉZET -----
             kombi = legjobb["Kombináció"]
-            flexi_ar = int(legjobb["Flexi ára"])
+            flexi_ar = f"{int(legjobb['Flexi ára']):,} Ft".replace(",", " ")
             maradek = int(legjobb["Maradék érték (Ft)"])
-            lista_ar = int(legjobb["Listaáron fizetne"])
+            lista_ar = f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " ")
 
             # Ármegjelenítés logikája
-            if flexi_ar < lista_ar:
+            if int(legjobb["Flexi ára"]) < int(legjobb["Listaáron fizetne"]):
                 # kedvezmény
-                ar_sor = f"~~{lista_ar:,} Ft~~ ➡️ **{flexi_ar:,} Ft**"
-            elif flexi_ar == lista_ar:
+                ar_sor = f"~~{lista_ar}~~ ➡️ **{flexi_ar}**"
+            elif int(legjobb["Flexi ára"]) == int(legjobb["Listaáron fizetne"]):
                 # nincs kedvezmény
-                ar_sor = f"**{flexi_ar:,} Ft**"
+                ar_sor = f"**{flexi_ar}**"
             else:
                 # drágább ajánlat
-                ar_sor = f"{lista_ar:,} Ft ➡️ :red[{flexi_ar:,} Ft]"
+                ar_sor = f"{lista_ar} ➡️ :red[{flexi_ar}]"
 
             # Ajándék sor csak ha van maradék
             if maradek > 0:
-                ajandek_sor = f"🎁 +{maradek:,} Ft értékű ajándék kezelés"
+                ajandek_sor = f"➕ {maradek:,} Ft értékű 🎁 ajándék kezelés".replace(",", " ")
             else:
                 ajandek_sor = ""
 
@@ -130,12 +130,11 @@ if st.button("Számolás"):
 
             col1, col2 = st.columns([2, 1])
             with col1:
-                st.markdown(f"##### {ar_sor}")
+                st.markdown(f"#### {ar_sor}")
             with col2:
-                st.write("")  # üres hely vagy további információ
+                st.empty()  # tartalékoszlop (pl. jövőbeli infókhoz)
 
             if ajandek_sor:
                 st.markdown(f"##### {ajandek_sor}")
 
             st.divider()
-
