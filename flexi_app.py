@@ -74,10 +74,35 @@ if st.button("Számolás"):
     if legjobb is None:
         st.error("Nincs olyan bérlet, ami fedezné az értéket.")
     else:
-        st.success("Legjobb ajánlat:")
-        st.metric("Kombináció", legjobb["Kombináció"])
-        st.metric("Flexi ára", f"{int(legjobb['Flexi ára']):,} Ft".replace(",", " "))
-        st.metric("Listaáron fizetne", f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " "))
-        st.metric("Megtakarítás", f"{int(legjobb['Megtakarítás (Ft)']):,} Ft".replace(",", " "))
-        st.metric("Flexi értéke", f"{int(legjobb['Flexi értéke']):,} Ft".replace(",", " "))
-        st.metric("Maradék érték", f"{int(legjobb['Maradék érték (Ft)']):,} Ft".replace(",", " "))
+        st.success("💡 Legjobb ajánlat:")
+        st.metric(
+            "Listaáron fizetne",
+            f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " ")
+        )
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            st.metric("Flexi ajánlat", legjobb["Kombináció"])
+        with col2:
+            st.metric(
+                "Flexi értéke",
+                f"{int(legjobb['Flexi értéke']):,} Ft".replace(",", " ")
+            )
+        st.markdown(
+            f"<div style='font-size:22px; font-weight:bold; margin-top:10px;'>"
+            f"💰 Flexi ára: {int(legjobb['Flexi ára']):,} Ft".replace(",", " ")
+            f"</div>",
+            unsafe_allow_html=True
+        )
+        st.markdown(
+            f"<div style='color:#2ecc71; font-size:20px; font-weight:bold;'>"
+            f"✅ Megtakarítás: {int(legjobb['Megtakarítás (Ft)']):,} Ft"
+            f" &nbsp;&nbsp;({legjobb['Megtakarítás (%)']}%)"
+            f"</div>",
+            unsafe_allow_html=True
+        )
+        st.markdown(
+            f"<div style='color:#555; font-size:16px; margin-top:5px;'>"
+            f"➕ Plusz felhasználható érték: {int(legjobb['Maradék érték (Ft)']):,} Ft".replace(",", " ")
+            f"</div>",
+            unsafe_allow_html=True
+        )
