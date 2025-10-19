@@ -117,20 +117,17 @@ if st.button("Számolás"):
                     margin-top:15px;
                     text-align:center;
                 ">
-                    <div style="font-size:18px; font-weight:bold; margin-bottom:5px;">
-                        Flexi csomagban:
-                    </div>
-                    <div style="font-size:26px; color:#2ecc71 font-weight:700; margin-bottom:10px; color:#111;">
+                    <div style="font-size:28px; color:#111; font-weight:700; margin-bottom:5px;">
                         {kombi}
                     </div>
-                    <div style="font-size:28px; color:#777; margin-bottom:4px;">
+                    <div style="font-size:28px; color:#777; margin-bottom:5px;">
                         <span style="text-decoration:line-through">{lista_ar:,} Ft</span> helyett
                     </div>
                     <div style="font-size:28px; color:#111; font-weight:700; margin-bottom:5px;">
                         💰 {flexi_ar:,} Ft
                     </div>
-                    <div style="font-size:18px; color:#27ae60; font-weight:600;">
-                        ➕ {maradek:,} Ft értékű szabadon felhasználható 🎁 ajándék kezeléssel
+                    <div style="font-size:18px; color:#111; font-weight:600;">
+                        ➕ {maradek:,} Ft értékű 🎁 ajándék kezelés
                     </div>
                 </div>
                 """.replace(",", " "),
