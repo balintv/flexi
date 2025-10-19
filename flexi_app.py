@@ -92,6 +92,6 @@ if st.button("Számolás"):
         st.metric(
             label="💼 Ajánlat teljes értéke",
             value=f"{flexi_ertek:,} Ft".replace(",", " "),
-            delta=f"➕ {maradek:,} Ft maradék érték".replace(",", " "),
+            delta=f"megmarad {maradek:,} Ft levásárolható érték".replace(",", " "),
             delta_color="normal"  # plusz = zöld
         )
