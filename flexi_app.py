@@ -118,9 +118,9 @@ if st.button("Számolás"):
                 # drágább ajánlat
                 ar_sor = f"{lista_ar} → :red[{flexi_ar}]"
 
-            # Ajándék sor csak ha van maradék
+            # Ha van maradék
             if maradek > 0:
-                ajandek_sor = f"+ {maradek:,} Ft értékű 🎁 ajándék kezelés".replace(",", " ")
+                ajandek_sor = f"+ {maradek:,} Ft levásárolható érték".replace(",", " ")
             else:
                 ajandek_sor = ""
 
