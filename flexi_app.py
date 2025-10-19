@@ -117,14 +117,14 @@ if st.button("Számolás"):
                     margin-top:15px;
                     text-align:center;
                 ">
-                    <div style="font-size:28px; color:#111; font-weight:700; margin-bottom:5px;">
+                    <div style="font-size:28px; color:#8C00D2; font-weight:700; margin-bottom:5px;">
                         {kombi}
                     </div>
                     <div style="font-size:28px; color:#777; margin-bottom:5px;">
                         <span style="text-decoration:line-through">{lista_ar:,} Ft</span> helyett
                     </div>
                     <div style="font-size:28px; color:#111; font-weight:700; margin-bottom:5px;">
-                        💰 {flexi_ar:,} Ft
+                        {flexi_ar:,} Ft
                     </div>
                     <div style="font-size:18px; color:#111; font-weight:600;">
                         ➕ {maradek:,} Ft értékű 🎁 ajándék kezelés
