@@ -101,65 +101,41 @@ if st.button("Számolás"):
             )
 
         else:
-            # ----- MARKETINGES NÉZET (okos feltételekkel) -----
+            # ----- MARKETINGES NÉZET (HTML nélkül, natív komponensekkel) -----
             kombi = legjobb["Kombináció"]
             flexi_ar = int(legjobb["Flexi ára"])
             maradek = int(legjobb["Maradék érték (Ft)"])
             lista_ar = int(legjobb["Listaáron fizetne"])
 
-            # --- árak megjelenítésének logikája ---
+            # Ármegjelenítés logikája
             if flexi_ar < lista_ar:
-                # Kedvezményes ár: áthúzott listaár + nyíl + új ár
-                ar_display = f"""
-                    <span style='color:#777; text-decoration:line-through;'>{lista_ar:,} Ft</span>
-                    &nbsp;➡️&nbsp;
-                    <span style='color:#111; font-weight:800;'>{flexi_ar:,} Ft</span>
-                """
+                # kedvezmény
+                ar_sor = f"~~{lista_ar:,} Ft~~ ➡️ **{flexi_ar:,} Ft**"
             elif flexi_ar == lista_ar:
-                # Nincs kedvezmény: csak ár, félkövérrel
-                ar_display = f"""
-                    <span style='color:#111; font-weight:800;'>{flexi_ar:,} Ft</span>
-                """
+                # nincs kedvezmény
+                ar_sor = f"**{flexi_ar:,} Ft**"
             else:
-                # Drágább ár: nyíl, de nincs áthúzás
-                ar_display = f"""
-                    <span style='color:#111;'>{lista_ar:,} Ft</span>
-                    &nbsp;➡️&nbsp;
-                    <span style='color:#c0392b; font-weight:800;'>{flexi_ar:,} Ft</span>
-                """
+                # drágább ajánlat
+                ar_sor = f"{lista_ar:,} Ft ➡️ :red[{flexi_ar:,} Ft]"
 
-            # --- ajándék kezelés megjelenítése (ha van maradék érték) ---
+            # Ajándék sor csak ha van maradék
             if maradek > 0:
-                ajandek_sor = f"""
-                    <div style='font-size:18px; color:#111; font-weight:600;'>
-                        ➕ {maradek:,} Ft értékű 🎁 ajándék kezelés
-                    </div>
-                """
+                ajandek_sor = f"🎁 +{maradek:,} Ft értékű ajándék kezelés"
             else:
                 ajandek_sor = ""
 
-            # --- teljes HTML blokk ---
-            html_block = f"""
-            <div style="
-                border-radius:12px;
-                padding:20px;
-                background:linear-gradient(135deg,#f9fafb,#eef6f9);
-                box-shadow:0 0 8px rgba(0,0,0,0.08);
-                margin-top:15px;
-                text-align:center;
-            ">
-                <div style="font-size:28px; color:#8C00D2; font-weight:700; margin-bottom:10px;">
-                    {kombi}
-                </div>
+            # „Kártya” jellegű blokk natív elrendezéssel
+            st.divider()
+            st.markdown(f"### 💜 {kombi}")
 
-                <div style="font-size:28px; color:#111; font-weight:600; margin-bottom:8px;">
-                    {ar_display}
-                </div>
+            col1, col2 = st.columns([2, 1])
+            with col1:
+                st.markdown(f"##### {ar_sor}")
+            with col2:
+                st.write("")  # üres hely vagy további információ
 
-                {ajandek_sor}
-            </div>
-            """.replace(",", " ")
+            if ajandek_sor:
+                st.markdown(f"##### {ajandek_sor}")
 
-            st.markdown(html_block, unsafe_allow_html=True)
-
+            st.divider()
 
