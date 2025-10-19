@@ -79,12 +79,12 @@ if st.button("Számolás"):
         st.metric("💡 Flexi ajánlat", legjobb["Kombináció"])
 
         flexi_ar = int(legjobb['Flexi ára'])
-        megtakaritas = (int(legjobb['Megtakarítás (Ft)']))*-1
+        megtakaritas = int(legjobb['Megtakarítás (Ft)'])
         st.metric(
             label="💰 Ajánlat ára",
             value=f"{flexi_ar:,} Ft".replace(",", " "),
             delta=f"{megtakaritas:,} Ft megtakarítás".replace(",", " "),
-            delta_color="normal"
+            delta_color="inverse"
         )
 
         flexi_ertek = int(legjobb["Flexi értéke"])
