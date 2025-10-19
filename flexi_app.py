@@ -124,17 +124,10 @@ if st.button("Számolás"):
             else:
                 ajandek_sor = ""
 
-            # „Kártya” jellegű blokk natív elrendezéssel
+            # „Kártya” jellegű blokk
             st.divider()
-            st.markdown(f"### 💜 {kombi}")
-
-            col1, col2 = st.columns([2, 1])
-            with col1:
-                st.markdown(f"#### {ar_sor}")
-            with col2:
-                st.empty()  # tartalékoszlop (pl. jövőbeli infókhoz)
-
+            st.markdown(f"### 💜 {kombi} bérlettel")
+            st.markdown(f"#### {ar_sor}")
             if ajandek_sor:
                 st.markdown(f"##### {ajandek_sor}")
-
             st.divider()
