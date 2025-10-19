@@ -130,32 +130,36 @@ if st.button("Számolás"):
 
             # --- ajándék kezelés megjelenítése (ha van maradék érték) ---
             if maradek > 0:
-                ajandek_sor = f"<div style='font-size:18px; color:#111; font-weight:600;'>➕ {maradek:,} Ft értékű 🎁 ajándék kezelés</div>"
+                ajandek_sor = f"""
+                    <div style='font-size:18px; color:#111; font-weight:600;'>
+                        ➕ {maradek:,} Ft értékű 🎁 ajándék kezelés
+                    </div>
+                """
             else:
                 ajandek_sor = ""
 
-            # --- teljes blokk ---
-            st.markdown(
-                f"""
-                <div style="
-                    border-radius:12px;
-                    padding:20px;
-                    background:linear-gradient(135deg,#f9fafb,#eef6f9);
-                    box-shadow:0 0 8px rgba(0,0,0,0.08);
-                    margin-top:15px;
-                    text-align:center;
-                ">
-                    <div style="font-size:28px; color:#8C00D2; font-weight:700; margin-bottom:10px;">
-                        {kombi}
-                    </div>
-
-                    <div style="font-size:28px; color:#111; font-weight:600; margin-bottom:8px;">
-                        {ar_display}
-                    </div>
-
-                    {ajandek_sor}
+            # --- teljes HTML blokk ---
+            html_block = f"""
+            <div style="
+                border-radius:12px;
+                padding:20px;
+                background:linear-gradient(135deg,#f9fafb,#eef6f9);
+                box-shadow:0 0 8px rgba(0,0,0,0.08);
+                margin-top:15px;
+                text-align:center;
+            ">
+                <div style="font-size:28px; color:#8C00D2; font-weight:700; margin-bottom:10px;">
+                    {kombi}
                 </div>
-                """.replace(",", " "),
-                unsafe_allow_html=True
-            )
+
+                <div style="font-size:28px; color:#111; font-weight:600; margin-bottom:8px;">
+                    {ar_display}
+                </div>
+
+                {ajandek_sor}
+            </div>
+            """.replace(",", " ")
+
+            st.markdown(html_block, unsafe_allow_html=True)
+
 
