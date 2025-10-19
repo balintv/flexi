@@ -88,21 +88,27 @@ if st.button("Számolás"):
                 f"{int(legjobb['Flexi értéke']):,} Ft".replace(",", " ")
             )
         st.markdown(
-            f"<div style='font-size:22px; font-weight:bold; margin-top:10px;'>"
-            f"💰 Flexi ára: {int(legjobb['Flexi ára']):,} Ft".replace(",", " ")
-            f"</div>",
+            f"""
+            <div style='font-size:22px; font-weight:bold; margin-top:10px;'>
+                💰 Flexi ára: {int(legjobb['Flexi ára']):,} Ft
+            </div>
+            """.replace(",", " "),
             unsafe_allow_html=True
         )
         st.markdown(
-            f"<div style='color:#2ecc71; font-size:20px; font-weight:bold;'>"
-            f"✅ Megtakarítás: {int(legjobb['Megtakarítás (Ft)']):,} Ft"
-            f" &nbsp;&nbsp;({legjobb['Megtakarítás (%)']}%)"
-            f"</div>",
+            f"""
+            <div style='color:#2ecc71; font-size:20px; font-weight:bold;'>
+                ✅ Megtakarítás: {int(legjobb['Megtakarítás (Ft)']):,} Ft
+                &nbsp;&nbsp;({legjobb['Megtakarítás (%)']}%)
+            </div>
+            """.replace(",", " "),
             unsafe_allow_html=True
         )
         st.markdown(
-            f"<div style='color:#555; font-size:16px; margin-top:5px;'>"
-            f"➕ Plusz felhasználható érték: {int(legjobb['Maradék érték (Ft)']):,} Ft".replace(",", " ")
-            f"</div>",
+            f"""
+            <div style='color:#555; font-size:16px; margin-top:5px;'>
+                ➕ Plusz felhasználható érték: {int(legjobb['Maradék érték (Ft)']):,} Ft
+            </div>
+            """.replace(",", " "),
             unsafe_allow_html=True
         )
