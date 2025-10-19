@@ -101,12 +101,40 @@ if st.button("Számolás"):
             )
 
         else:
-            # ----- MARKETINGES NÉZET -----
+            # ----- MARKETINGES NÉZET (okos feltételekkel) -----
             kombi = legjobb["Kombináció"]
             flexi_ar = int(legjobb["Flexi ára"])
             maradek = int(legjobb["Maradék érték (Ft)"])
             lista_ar = int(legjobb["Listaáron fizetne"])
 
+            # --- árak megjelenítésének logikája ---
+            if flexi_ar < lista_ar:
+                # Kedvezményes ár: áthúzott listaár + nyíl + új ár
+                ar_display = f"""
+                    <span style='color:#777; text-decoration:line-through;'>{lista_ar:,} Ft</span>
+                    &nbsp;➡️&nbsp;
+                    <span style='color:#111; font-weight:800;'>{flexi_ar:,} Ft</span>
+                """
+            elif flexi_ar == lista_ar:
+                # Nincs kedvezmény: csak ár, félkövérrel
+                ar_display = f"""
+                    <span style='color:#111; font-weight:800;'>{flexi_ar:,} Ft</span>
+                """
+            else:
+                # Drágább ár: nyíl, de nincs áthúzás
+                ar_display = f"""
+                    <span style='color:#111;'>{lista_ar:,} Ft</span>
+                    &nbsp;➡️&nbsp;
+                    <span style='color:#c0392b; font-weight:800;'>{flexi_ar:,} Ft</span>
+                """
+
+            # --- ajándék kezelés megjelenítése (ha van maradék érték) ---
+            if maradek > 0:
+                ajandek_sor = f"<div style='font-size:18px; color:#111; font-weight:600;'>➕ {maradek:,} Ft értékű 🎁 ajándék kezelés</div>"
+            else:
+                ajandek_sor = ""
+
+            # --- teljes blokk ---
             st.markdown(
                 f"""
                 <div style="
@@ -117,18 +145,17 @@ if st.button("Számolás"):
                     margin-top:15px;
                     text-align:center;
                 ">
-                    <div style="font-size:28px; color:#8C00D2; font-weight:700; margin-bottom:5px;">
+                    <div style="font-size:28px; color:#8C00D2; font-weight:700; margin-bottom:10px;">
                         {kombi}
                     </div>
+
                     <div style="font-size:28px; color:#111; font-weight:600; margin-bottom:8px;">
-                        <span style="color:#777; text-decoration:line-through;">{lista_ar:,} Ft</span>
-                        &nbsp;➡️&nbsp;
-                        <span style="color:#111; font-weight:800;">{flexi_ar:,} Ft</span>
+                        {ar_display}
                     </div>
-                    <div style="font-size:18px; color:#111; font-weight:600;">
-                        ➕ {maradek:,} Ft értékű 🎁 ajándék kezelés
-                    </div>
+
+                    {ajandek_sor}
                 </div>
                 """.replace(",", " "),
                 unsafe_allow_html=True
             )
+
