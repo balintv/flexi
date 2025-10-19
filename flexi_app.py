@@ -65,8 +65,8 @@ Add meg a kezelés **listaárát** és az **alkalmak számát**:
 """)
 
 # Bemenetek
-lista_ar_alkalom = st.number_input("Listaár egy alkalomra (Ft):", min_value=10000, step=10000, value=140000)
-alkalmak = st.number_input("Alkalmak száma:", min_value=1, max_value=10, step=1, value=3)
+lista_ar_alkalom = st.number_input("Listaár egy alkalomra (Ft):", min_value=10000, step=10000, value=None)
+alkalmak = st.number_input("Alkalmak száma:", min_value=1, max_value=10, step=1, value=None)
 
 # Gomb
 if st.button("Számolás"):
@@ -74,11 +74,9 @@ if st.button("Számolás"):
     if legjobb is None:
         st.error("Nincs olyan bérlet, ami fedezné az értéket.")
     else:
-        st.success("💡 Legjobb ajánlat:")
-
         st.metric("Listaáron fizetne", f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " "))
 
-        st.metric("Flexi ajánlat", legjobb["Kombináció"])
+        st.metric("💡 Flexi ajánlat", legjobb["Kombináció"])
 
         flexi_ar = int(legjobb['Flexi ára'])
         megtakaritas = int(legjobb['Megtakarítás (Ft)'])
@@ -86,14 +84,14 @@ if st.button("Számolás"):
             label="💰 Ajánlat ára",
             value=f"{flexi_ar:,} Ft".replace(",", " "),
             delta=f"{megtakaritas:,} Ft megtakarítás".replace(",", " "),
-            delta_color="inverse"  # „inverse” = alacsonyabb érték → zöld
+            delta_color="normal"
         )
 
         flexi_ertek = int(legjobb["Flexi értéke"])
         maradek = int(legjobb["Maradék érték (Ft)"])
         st.metric(
-            label="💼 Ajánlat értéke",
+            label="💼 Ajánlat teljes értéke",
             value=f"{flexi_ertek:,} Ft".replace(",", " "),
-            delta=f"+{maradek:,} Ft felhasználható érték".replace(",", " "),
+            delta=f"➕ {maradek:,} Ft maradék érték".replace(",", " "),
             delta_color="normal"  # plusz = zöld
         )
