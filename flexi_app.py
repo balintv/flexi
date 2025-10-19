@@ -75,40 +75,25 @@ if st.button("Számolás"):
         st.error("Nincs olyan bérlet, ami fedezné az értéket.")
     else:
         st.success("💡 Legjobb ajánlat:")
+
+        st.metric("Listaáron fizetne", f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " "))
+
+        st.metric("Flexi ajánlat", legjobb["Kombináció"])
+
+        flexi_ar = int(legjobb['Flexi ára'])
+        megtakaritas = int(legjobb['Megtakarítás (Ft)'])
         st.metric(
-            "Listaáron fizetne",
-            f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " ")
+            label="💰 Ajánlat ára",
+            value=f"{flexi_ar:,} Ft".replace(",", " "),
+            delta=f"{megtakaritas:,} Ft megtakarítás".replace(",", " "),
+            delta_color="inverse"  # „inverse” = alacsonyabb érték → zöld
         )
-        col1, col2 = st.columns([1, 1])
-        with col1:
-            st.metric("Flexi ajánlat", legjobb["Kombináció"])
-        with col2:
-            st.metric(
-                "Flexi értéke",
-                f"{int(legjobb['Flexi értéke']):,} Ft".replace(",", " ")
-            )
-        st.markdown(
-            f"""
-            <div style='font-size:22px; font-weight:bold; margin-top:10px;'>
-                💰 Flexi ára: {int(legjobb['Flexi ára']):,} Ft
-            </div>
-            """.replace(",", " "),
-            unsafe_allow_html=True
-        )
-        st.markdown(
-            f"""
-            <div style='color:#2ecc71; font-size:20px; font-weight:bold;'>
-                ✅ Megtakarítás: {int(legjobb['Megtakarítás (Ft)']):,} Ft
-                &nbsp;&nbsp;({legjobb['Megtakarítás (%)']}%)
-            </div>
-            """.replace(",", " "),
-            unsafe_allow_html=True
-        )
-        st.markdown(
-            f"""
-            <div style='color:#555; font-size:16px; margin-top:5px;'>
-                ➕ Plusz felhasználható érték: {int(legjobb['Maradék érték (Ft)']):,} Ft
-            </div>
-            """.replace(",", " "),
-            unsafe_allow_html=True
+
+        flexi_ertek = int(legjobb["Flexi értéke"])
+        maradek = int(legjobb["Maradék érték (Ft)"])
+        st.metric(
+            label="💼 Ajánlat értéke",
+            value=f"{flexi_ertek:,} Ft".replace(",", " "),
+            delta=f"+{maradek:,} Ft felhasználható érték".replace(",", " "),
+            delta_color="normal"  # plusz = zöld
         )
