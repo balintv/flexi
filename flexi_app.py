@@ -68,30 +68,74 @@ Add meg a kezelés **listaárát** és az **alkalmak számát**:
 lista_ar_alkalom = st.number_input("Listaár egy alkalomra (Ft):", min_value=10000, step=10000, value=None)
 alkalmak = st.number_input("Alkalmak száma:", min_value=1, max_value=10, step=1, value=None)
 
+# Kijelzési mód választó
+display_mode = st.radio("Megjelenítési mód:", ["📊 Metrikus nézet", "🎁 Marketinges nézet"])
+
 # Gomb
 if st.button("Számolás"):
     legjobb, minden = legjobb_flexi_ajanlat(lista_ar_alkalom, alkalmak)
     if legjobb is None:
         st.error("Nincs olyan bérlet, ami fedezné az értéket.")
     else:
-        st.metric("Listaáron fizetne", f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " "))
+        if display_mode == "📊 Metrikus nézet":
+            # ----- METRIKUS NÉZET -----
+            st.metric("Listaáron fizetne", f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " "))
+            st.metric("💡 Flexi ajánlat", legjobb["Kombináció"])
 
-        st.metric("💡 Flexi ajánlat", legjobb["Kombináció"])
+            flexi_ar = int(legjobb['Flexi ára'])
+            megtakaritas = int(legjobb['Megtakarítás (Ft)'])
+            st.metric(
+                label="💰 Ajánlat ára",
+                value=f"{flexi_ar:,} Ft".replace(",", " "),
+                delta=f"{megtakaritas:,} Ft megtakarítás".replace(",", " "),
+                delta_color="inverse"  # kisebb ár = zöld
+            )
 
-        flexi_ar = int(legjobb['Flexi ára'])
-        megtakaritas = (int(legjobb['Megtakarítás (Ft)']))*-1
-        st.metric(
-            label="💰 Ajánlat ára",
-            value=f"{flexi_ar:,} Ft".replace(",", " "),
-            delta=f"{megtakaritas:,} Ft megtakarítás".replace(",", " "),
-            delta_color="normal"
-        )
+            flexi_ertek = int(legjobb["Flexi értéke"])
+            maradek = int(legjobb["Maradék érték (Ft)"])
+            st.metric(
+                label="💼 Ajánlat teljes értéke",
+                value=f"{flexi_ertek:,} Ft".replace(",", " "),
+                delta=f"+{maradek:,} Ft levásárolható érték marad a bérletén".replace(",", " "),
+                delta_color="normal"  # plusz = zöld
+            )
 
-        flexi_ertek = int(legjobb["Flexi értéke"])
-        maradek = int(legjobb["Maradék érték (Ft)"])
-        st.metric(
-            label="💼 Ajánlat teljes értéke",
-            value=f"{flexi_ertek:,} Ft".replace(",", " "),
-            delta=f"megmarad {maradek:,} Ft levásárolható érték".replace(",", " "),
-            delta_color="normal"  # plusz = zöld
-        )
+        else:
+            # ----- MARKETINGES NÉZET -----
+            kombi = legjobb["Kombináció"]
+            flexi_ar = int(legjobb["Flexi ára"])
+            maradek = int(legjobb["Maradék érték (Ft)"])
+            lista_ar = int(legjobb["Listaáron fizetne"])
+
+            st.markdown(
+                f"""
+                <div style="
+                    border-radius:12px;
+                    padding:20px;
+                    background:linear-gradient(135deg,#f9fafb,#eef6f9);
+                    box-shadow:0 0 8px rgba(0,0,0,0.08);
+                    margin-top:15px;
+                    text-align:center;
+                ">
+                    <div style="font-size:18px; color:#2ecc71; font-weight:bold; margin-bottom:5px;">
+                        ⭐ A legtöbben ezt választják
+                    </div>
+                    <div style="font-size:26px; font-weight:700; margin-bottom:10px; color:#111;">
+                        {kombi}
+                    </div>
+                    <div style="font-size:20px; color:#777; text-decoration:line-through; margin-bottom:4px;">
+                        {lista_ar:,} Ft
+                    </div>
+                    <div style="font-size:28px; color:#111; font-weight:700; margin-bottom:5px;">
+                        💰 {flexi_ar:,} Ft
+                        <span style="font-size:16px; color:#2ecc71; font-weight:600;">
+                            &nbsp;Flexi ajánlat ára
+                        </span>
+                    </div>
+                    <div style="font-size:18px; color:#27ae60; font-weight:600;">
+                        🎁 +{maradek:,} Ft értékű ajándék kezelés
+                    </div>
+                </div>
+                """.replace(",", " "),
+                unsafe_allow_html=True
+            )
