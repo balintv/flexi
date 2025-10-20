@@ -75,18 +75,81 @@ nem = st.radio("Nem:", ["Hölgy", "Férfi"])
 # árlista méretkategóriákkal
 ARLISTA = {
     "Hölgy": {
-        "XS – 19 900 Ft / alkalom": {"Állcsúcs": 19900, "Bajusz": 19900, "Popsi részben": 19900, "Mellbimbó körül": 19900, "Szemöldök között": 19900},
-        "S – 24 900 Ft / alkalom": {"Áll": 24900, "Orca": 24900, "Pajesz": 24900, "Nyak": 24900},
-        "M – 27 900 Ft / alkalom": {"Hónalj": 27900, "Bikinivonal": 27900},
-        "L – 39 900 Ft / alkalom": {"Teljes bikini": 39900, "Has": 39900},
-        "XL – 47 900 Ft / alkalom": {"Lábszár": 47900, "Comb": 47900, "Teljes arc": 47900}
+        "XS – 19 900 Ft / alkalom": {
+            "Állcsúcs": 19900,
+            "Bajusz": 19900,
+            "Popsi részben": 19900,
+            "Mellbimbó körül": 19900,
+            "Szemöldök között": 19900
+        },
+        "S – 24 900 Ft / alkalom": {
+            "Áll": 24900,
+            "Orca": 24900,
+            "Pajesz": 24900,
+            "Mellek között": 24900,
+            "Hascsík (4 cm)": 24900,
+            "Kézfej + ujjak": 24900,
+            "Lábfej + lábujjak": 24900,
+            "Homlok": 24900,
+            "Nyak": 24900
+        },
+        "M – 27 900 Ft / alkalom": {
+            "Hónalj": 27900,
+            "Bikinivonal": 27900,
+            "Hascsík (10 cm)": 27900
+        },
+        "L – 39 900 Ft / alkalom": {
+            "Teljes bikini (intim)": 39900,
+            "Popsi": 39900,
+            "Váll": 39900,
+            "Alkar": 39900,
+            "Felkar": 39900,
+            "Mellkas": 39900,
+            "Has": 39900
+        },
+        "XL – 47 900 Ft / alkalom": {
+            "Lábszár": 47900,
+            "Comb": 47900,
+            "Hát": 47900,
+            "Teljes arc": 47900
+        }
     },
     "Férfi": {
-        "XS – 23 880 Ft / alkalom": {"Állcsúcs": 23880, "Bajusz": 23880, "Mellbimbó körül": 23880, "Szemöldök között": 23880},
-        "S – 29 880 Ft / alkalom": {"Áll": 29880, "Orca": 29880, "Pajesz": 29880, "Nyak": 29880},
-        "M – 33 480 Ft / alkalom": {"Hónalj": 33480},
-        "L – 47 880 Ft / alkalom": {"Has": 47880, "Mellkas": 47880},
-        "XL – 57 480 Ft / alkalom": {"Lábszár": 57480, "Comb": 57480, "Teljes arc": 57480}
+        "XS – 23 880 Ft / alkalom": {
+            "Állcsúcs": 23880,
+            "Bajusz": 23880,
+            "Mellbimbó körül": 23880,
+            "Szemöldök között": 23880
+        },
+        "S – 29 880 Ft / alkalom": {
+            "Áll": 29880,
+            "Orca": 29880,
+            "Pajesz": 29880,
+            "Mellek között": 29880,
+            "Hascsík (4 cm)": 29880,
+            "Kézfej + ujjak": 29880,
+            "Lábfej + lábujjak": 29880,
+            "Homlok": 29880,
+            "Nyak": 29880
+        },
+        "M – 33 480 Ft / alkalom": {
+            "Hónalj": 33480,
+            "Hascsík (10 cm)": 33480
+        },
+        "L – 47 880 Ft / alkalom": {
+            "Far": 47880,
+            "Váll": 47880,
+            "Alkar": 47880,
+            "Felkar": 47880,
+            "Mellkas": 47880,
+            "Has": 47880
+        },
+        "XL – 57 480 Ft / alkalom": {
+            "Lábszár": 57480,
+            "Comb": 57480,
+            "Hát": 57480,
+            "Teljes arc": 57480
+        }
     }
 }
 
