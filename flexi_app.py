@@ -261,7 +261,7 @@ if kivalasztott:
     st.divider()
 
     st.metric("Listaáron fizetne", f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " "))
-    st.metric("💡 Flexi ajánlat", f"Flexi{kombinacio_szoveg}")
+    #st.metric("💡 Flexi ajánlat", f"Flexi{kombinacio_szoveg}")
 
     flexi_ar = int(legjobb["Flexi ára"])
     megtakaritas = (int(legjobb["Megtakarítás (Ft)"])) * -1
