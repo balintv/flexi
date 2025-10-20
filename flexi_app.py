@@ -254,7 +254,7 @@ if st.button("Számolás"):
                     st.divider()
 
             # <<< KÖZELI BÉRLET AJÁNLÁS >>>
-            KOZELI_KUSZOB = 20000  # Ft
+            KOZELI_KUSZOB = 50000  # Ft
             aktualis_ar = int(legjobb["Flexi ára"])
             aktualis_ertek = int(legjobb["Flexi értéke"])
 
