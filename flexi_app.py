@@ -20,7 +20,7 @@ BERLETEK = [
 
 # árlista méretkategóriákkal
 ARLISTA = {
-    "Hölgy": {
+    "Nő": {
         "XS – 19 900 Ft / alkalom": {
             "Állcsúcs": 19900,
             "Bajusz": 19900,
@@ -137,10 +137,6 @@ def legjobb_flexi_ajanlat(lista_ar_alkalom: float, alkalmak: int):
 
 st.set_page_config(page_title="Flexi bérlet ajánló", layout="centered")
 
-
-# kijelzési mód választó
-display_mode = st.radio("Nézet:", ["🎁 Ajánló", "📊 Metrikus"])
-
 # nem kiválasztása
 nem = st.radio("Nem:", ["Hölgy", "Férfi"])
 
@@ -168,7 +164,7 @@ for meret, teruletek in ARLISTA[nem].items():
                     key=f"{nem}_{testrész}_alkalom"
                 )
                 kivalasztott.append({"testrész": testrész, "alkalom": alkalom, "ar": ar})
-                
+
     st.markdown("&nbsp;", unsafe_allow_html=True)
 
 # összegzés
@@ -178,6 +174,11 @@ if kivalasztott:
     st.info(f"**Teljes csomag listaáron:** {osszes_ar:,} Ft".replace(",", " "))
 else:
     st.warning("Válassz legalább egy kezelést a számításhoz!")
+
+st.divider()
+
+# kijelzési mód választó
+display_mode = st.radio("Nézet:", ["🎁 Ajánló", "📊 Minden szám"])
 
 # ========== SZÁMÍTÁS GOMB ==========
 if st.button("Számolás"):
