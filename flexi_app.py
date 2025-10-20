@@ -150,33 +150,31 @@ st.markdown("&nbsp;", unsafe_allow_html=True)
 kivalasztott = []
 
 for meret, teruletek in ARLISTA[nem].items():
-    # méret- és ár cím (pl. XS – 19 900 Ft / alkalom)
-    st.markdown(f"**{meret}**")
+    # méret és ár kategória (pl. "XS – 19 900 Ft / alkalom")
+    st.markdown(f"##### {meret}")
 
-    # testrészek listája második sorban, vesszővel elválasztva
-    testrész_lista = ", ".join(list(teruletek.keys()))
-    st.caption(testrész_lista)
-
-    # expander maga csak a kiválasztást tartalmazza
-    with st.expander("Területek"):
-        for testrész, ar in teruletek.items():
-            col1, col2 = st.columns([3, 1])
-            with col1:
-                jelol = st.checkbox(f"{testrész}", key=f"{nem}_{testrész}")
-            with col2:
-                if jelol:
-                    alkalom = st.number_input(
-                        "Alkalmak", min_value=1, max_value=10, step=1, value=1, key=f"{nem}_{testrész}_alkalom"
-                    )
-                    kivalasztott.append({"testrész": testrész, "alkalom": alkalom, "ar": ar})
-
-    st.markdown("&nbsp;", unsafe_allow_html=True)
+    # testrészek listája checkboxokkal
+    for testrész, ar in teruletek.items():
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            jelol = st.checkbox(f"{testrész}", key=f"{nem}_{testrész}")
+        with col2:
+            if jelol:
+                alkalom = st.number_input(
+                    "Alkalmak",
+                    min_value=1,
+                    max_value=10,
+                    step=1,
+                    value=1,
+                    key=f"{nem}_{testrész}_alkalom"
+                )
+                kivalasztott.append({"testrész": testrész, "alkalom": alkalom, "ar": ar})
 
 # összegzés
 osszes_ar = sum(k["ar"] * k["alkalom"] for k in kivalasztott)
 
 if kivalasztott:
-    st.info(f"**Teljes listaár:** {osszes_ar:,} Ft".replace(",", " "))
+    st.info(f"**Teljes csomag listaáron:** {osszes_ar:,} Ft".replace(",", " "))
 else:
     st.warning("Válassz legalább egy kezelést a számításhoz!")
 
