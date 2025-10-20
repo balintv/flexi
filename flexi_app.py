@@ -67,7 +67,6 @@ Add meg a kezelés **listaárát** és az **alkalmak számát**:
 display_mode = st.radio("Nézet:", ["🎁 Ajánló", "📊 Metrikus"])
 
 # ========== ÚJ KEZELÉSVÁLASZTÓ RÉSZ ==========
-
 st.subheader("Kezelések kiválasztása")
 
 # nem kiválasztása
@@ -76,18 +75,18 @@ nem = st.radio("Nem:", ["Hölgy", "Férfi"])
 # árlista méretkategóriákkal
 ARLISTA = {
     "Hölgy": {
-        "XS": {"Állcsúcs": 19900, "Bajusz": 19900, "Popsi részben": 19900, "Mellbimbó körül": 19900, "Szemöldök között": 19900},
-        "S": {"Áll": 24900, "Orca": 24900, "Pajesz": 24900, "Nyak": 24900},
-        "M": {"Hónalj": 27900, "Bikinivonal": 27900},
-        "L": {"Teljes bikini": 39900, "Has": 39900},
-        "XL": {"Lábszár": 47900, "Comb": 47900, "Teljes arc": 47900}
+        "XS – 19 900 Ft / alkalom": {"Állcsúcs": 19900, "Bajusz": 19900, "Popsi részben": 19900, "Mellbimbó körül": 19900, "Szemöldök között": 19900},
+        "S – 24 900 Ft / alkalom": {"Áll": 24900, "Orca": 24900, "Pajesz": 24900, "Nyak": 24900},
+        "M – 27 900 Ft / alkalom": {"Hónalj": 27900, "Bikinivonal": 27900},
+        "L – 39 900 Ft / alkalom": {"Teljes bikini": 39900, "Has": 39900},
+        "XL – 47 900 Ft / alkalom": {"Lábszár": 47900, "Comb": 47900, "Teljes arc": 47900}
     },
     "Férfi": {
-        "XS": {"Állcsúcs": 23880, "Bajusz": 23880, "Mellbimbó körül": 23880, "Szemöldök között": 23880},
-        "S": {"Áll": 29880, "Orca": 29880, "Pajesz": 29880, "Nyak": 29880},
-        "M": {"Hónalj": 33480},
-        "L": {"Has": 47880, "Mellkas": 47880},
-        "XL": {"Lábszár": 57480, "Comb": 57480, "Teljes arc": 57480}
+        "XS – 23 880 Ft / alkalom": {"Állcsúcs": 23880, "Bajusz": 23880, "Mellbimbó körül": 23880, "Szemöldök között": 23880},
+        "S – 29 880 Ft / alkalom": {"Áll": 29880, "Orca": 29880, "Pajesz": 29880, "Nyak": 29880},
+        "M – 33 480 Ft / alkalom": {"Hónalj": 33480},
+        "L – 47 880 Ft / alkalom": {"Has": 47880, "Mellkas": 47880},
+        "XL – 57 480 Ft / alkalom": {"Lábszár": 57480, "Comb": 57480, "Teljes arc": 57480}
     }
 }
 
@@ -100,7 +99,7 @@ for meret, teruletek in ARLISTA[nem].items():
     for testrész, ar in teruletek.items():
         col1, col2 = st.columns([3, 1])
         with col1:
-            jelol = st.checkbox(f"{testrész} – {ar:,} Ft / alkalom".replace(",", " "), key=f"{nem}_{testrész}")
+            jelol = st.checkbox(f"{testrész}", key=f"{nem}_{testrész}")
         with col2:
             if jelol:
                 alkalom = st.number_input(
@@ -114,7 +113,7 @@ osszes_ar = sum(k["ar"] * k["alkalom"] for k in kivalasztott)
 if kivalasztott:
     st.info(f"**Teljes listaár:** {osszes_ar:,} Ft".replace(",", " "))
 else:
-    st.warning("Válasszon legalább egy kezelést a számításhoz!")
+    st.warning("Válassz legalább egy kezelést a számításhoz!")
 
 # ========== SZÁMÍTÁS GOMB ==========
 if st.button("Számolás"):
