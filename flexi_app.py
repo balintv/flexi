@@ -246,12 +246,10 @@ if st.button("Számolás"):
 
                 left, mid, right = st.columns([1, 3, 1])
                 with mid:
-                    st.divider()
                     st.markdown(f"### 💜 {kombi} bérlettel")
                     st.markdown(f"#### {ar_sor}")
                     if ajandek_sor:
                         st.markdown(f"##### {ajandek_sor}")
-                    st.divider()
 
             # <<< KÖZELI BÉRLET AJÁNLÁS >>>
             # Csak akkor ajánljon, ha a legjobb bérlet ára alacsonyabb, mint a listaár
