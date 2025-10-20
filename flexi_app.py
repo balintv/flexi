@@ -141,6 +141,7 @@ st.markdown("""
     <style>
         /* kisebb térköz a checkboxok között */
         div[data-testid="stCheckbox"] {
+            margin-top: 0.1rem;
             margin-bottom: 0.1rem;  /* alapértelmezett ~1rem helyett */
         }
     </style>
