@@ -138,7 +138,7 @@ def legjobb_flexi_ajanlat(lista_ar_alkalom: float, alkalmak: int):
 st.set_page_config(page_title="Flexi bérlet ajánló", layout="centered")
 
 # nem kiválasztása
-nem = st.radio("##### Páciens neme:", ["Nő", "Férfi"])
+nem = st.radio("Páciens neme:", ["Nő", "Férfi"])
 
 st.markdown("&nbsp;", unsafe_allow_html=True)
 
@@ -167,18 +167,34 @@ for meret, teruletek in ARLISTA[nem].items():
 
     st.markdown("&nbsp;", unsafe_allow_html=True)
 
-# összegzés
+# kosár jellegű összesítő
 osszes_ar = sum(k["ar"] * k["alkalom"] for k in kivalasztott)
 
 if kivalasztott:
+    # mini táblázat a kiválasztott kezelésekről
+    st.markdown("#### 🧾 Összesítés")
+    df_kosar = pd.DataFrame(
+        [
+            {
+                "Testrész": k["testrész"],
+                "Alkalmak száma": k["alkalom"],
+                "Ár / alkalom (Ft)": f"{k['ar']:,}".replace(",", " "),
+                "Részösszeg (Ft)": f"{k['ar'] * k['alkalom']:,}".replace(",", " "),
+            }
+            for k in kivalasztott
+        ]
+    )
+
+    st.table(df_kosar)
     st.info(f"**Teljes csomag listaáron:** {osszes_ar:,} Ft".replace(",", " "))
+
 else:
     st.warning("Válassz legalább egy kezelést a számításhoz!")
 
 st.divider()
 
 # kijelzési mód választó
-display_mode = st.radio("Nézet:", ["🎁 Ajánló", "📊 Minden szám"], label_visibility="hidden")
+display_mode = st.radio("Nézet:", ["🎁 Ajánló", "📊 Számok"], label_visibility="hidden")
 
 # ========== SZÁMÍTÁS GOMB ==========
 if st.button("Számolás"):
@@ -192,7 +208,7 @@ if st.button("Számolás"):
             # 💡 rövidebb kombináció-megjelenítés (Flexi100+50)
             kombinacio_szoveg = legjobb["Kombináció"].replace("Flexi", "").replace(" + ", "+").strip()
 
-            if display_mode == "📊 Metrikus":
+            if display_mode == "📊 Számok":
                 st.metric("Listaáron fizetne", f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " "))
                 st.metric("💡 Flexi ajánlat", f"Flexi{kombinacio_szoveg}")
 
