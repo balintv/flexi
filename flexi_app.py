@@ -141,7 +141,6 @@ st.markdown("""
 <style>
 /* CHECKBOX SPACING */
 div.row-widget.stCheckbox {
-    margin-top: -15px !important;
     margin-bottom: -15px !important;
 }
 
@@ -171,15 +170,6 @@ div[data-testid="stNumberInputContainer"] {
     margin-top: -15px !important;
     margin-bottom: -15px !important;
 }
-
-# /* A mező kisebb legyen vizuálisan */
-# div[data-testid="stNumberInput"] input {
-#     height: 1.8em !important;
-#     padding: 2px 4px !important;
-#     font-size: 0.9rem !important;
-#     margin-top: -4px !important;
-#     margin-bottom: -8px !important;
-# }
 </style>
 """, unsafe_allow_html=True)
 
