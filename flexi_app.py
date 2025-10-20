@@ -169,8 +169,6 @@ for meret, teruletek in ARLISTA[nem].items():
                     )
                     kivalasztott.append({"testrész": testrész, "alkalom": alkalom, "ar": ar})
 
-    st.markdown("---")  # vizuális elválasztás a kategóriák között
-
 # összegzés
 osszes_ar = sum(k["ar"] * k["alkalom"] for k in kivalasztott)
 
