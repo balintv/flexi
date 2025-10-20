@@ -171,7 +171,7 @@ for meret, teruletek in ARLISTA[nem].items():
 osszes_ar = sum(k["ar"] * k["alkalom"] for k in kivalasztott)
 
 if kivalasztott:
-    st.markdown("#### 🧾 Összesítés")
+    st.markdown("#### 🧾 Összesítő")
     df_kosar = pd.DataFrame(
         [
             {
