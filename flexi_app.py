@@ -135,7 +135,7 @@ def legjobb_flexi_ajanlat(lista_ar_alkalom: float, alkalmak: int):
 
 # ========== Streamlit UI ==========
 
-st.set_page_config(page_title="Flexi bérlet ajánló", layout="centered")
+st.set_page_config(page_title="Flexi bérlet ajánló", layout="centered", page_icon="👛")
 
 # nem kiválasztása
 nem = st.radio("Páciens neme:", ["Nő", "Férfi"])
@@ -143,9 +143,7 @@ nem = st.radio("Páciens neme:", ["Nő", "Férfi"])
 st.markdown("&nbsp;", unsafe_allow_html=True)
 
 kivalasztott = []
-
 for meret, teruletek in ARLISTA[nem].items():
-    # méret és ár kategória (pl. "XS – 19 900 Ft / alkalom")
     st.markdown(f"##### {meret}")
 
     # testrészek listája checkboxokkal
@@ -285,3 +283,27 @@ if kivalasztott:
 
 else:
     st.warning("Válassz legalább egy kezelést a számításhoz!")
+
+st.divider()
+
+# bérletek táblázata
+df_berletek = pd.DataFrame(BERLETEK)
+
+# oszlopok átnevezése és formázása
+df_berletek = df_berletek.rename(columns={
+    "nev": "Bérlet típusa",
+    "ar": "Bérlet ára (Ft)",
+    "ertek": "Felhasználható érték (Ft)"
+})
+df_berletek["Megtakarítás (Ft)"] = df_berletek["Felhasználható érték (Ft)"] - df_berletek["Bérlet ára (Ft)"]
+
+# magyar formátum (ezres elválasztó szóközzel)
+df_berletek["Bérlet ára (Ft)"] = df_berletek["Bérlet ára (Ft)"].map(lambda x: f"{x:,}".replace(",", " "))
+df_berletek["Felhasználható érték (Ft)"] = df_berletek["Felhasználható érték (Ft)"].map(lambda x: f"{x:,}".replace(",", " "))
+df_berletek["Megtakarítás (Ft)"] = df_berletek["Megtakarítás (Ft)"].map(lambda x: f"{x:,}".replace(",", " "))
+
+# üres index
+df_berletek.index = [""] * len(df_berletek)
+
+# táblázat megjelenítése
+st.table(df_berletek, border="horizontal")
