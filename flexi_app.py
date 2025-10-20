@@ -60,10 +60,12 @@ st.title("Flexi bérlet tervező")
 
 # Kijelzési mód választó
 display_mode = st.radio("Nézet:", ["🎁 Ajánló", "📊 Metrikus"])
+st.markdown("---")
 
 # ========== ÚJ KEZELÉSVÁLASZTÓ RÉSZ ==========
 # nem kiválasztása
 nem = st.radio("Nem:", ["Hölgy", "Férfi"])
+st.markdown("---")
 
 # árlista méretkategóriákkal
 ARLISTA = {
@@ -168,6 +170,8 @@ for meret, teruletek in ARLISTA[nem].items():
                         "Alkalmak", min_value=1, max_value=10, step=1, value=1, key=f"{nem}_{testrész}_alkalom"
                     )
                     kivalasztott.append({"testrész": testrész, "alkalom": alkalom, "ar": ar})
+
+    st.markdown("&nbsp;", unsafe_allow_html=True)
 
 # összegzés
 osszes_ar = sum(k["ar"] * k["alkalom"] for k in kivalasztott)
