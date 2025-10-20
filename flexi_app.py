@@ -268,14 +268,17 @@ if st.button("Számolás"):
                     if b["ar"] > aktualis_ar and (b["ar"] - aktualis_ar) <= KOZELI_KUSZOB:
                         ar_kulonbseg = b["ar"] - aktualis_ar
                         extra_ertek = b["ertek"] - aktualis_ertek
+                        ar_kulonbseg_szoveg = f"{ar_kulonbseg:,}".replace(",", " ")
+                        extra_ertek_szoveg = f"{extra_ertek:,}".replace(",", " ")
+
                         st.markdown(
                             f"""
                             <div style='background-color:#f7f3fc; border-radius:10px; padding:12px; margin-top:10px;'>
-                            💡 <b>Tipp:</b> ha <b>+{ar_kulonbseg:,} Ft</b>-ot fizet,
-                            <b>+{extra_ertek:,} Ft</b> értékkel több kezelést kaphat a
+                            💡 <b>Tipp:</b> ha <b>+{ar_kulonbseg_szoveg} Ft</b>-ot fizet,
+                            <b>+{extra_ertek_szoveg} Ft</b> értékkel több kezelést kaphat a
                             <b>{b['nev']}</b> bérlettel.
                             </div>
-                            """.replace(",", " "),
+                            """,
                             unsafe_allow_html=True
                         )
                         break
