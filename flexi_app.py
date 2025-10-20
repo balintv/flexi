@@ -168,7 +168,8 @@ for meret, teruletek in ARLISTA[nem].items():
                     max_value=10,
                     step=1,
                     value=1,
-                    key=f"{nem}_{testrész}_alkalom"
+                    key=f"{nem}_{testrész}_alkalom",
+                    label_visibility="visible"
                 )
                 kivalasztott.append({"testrész": testrész, "alkalom": alkalom, "ar": ar})
 
