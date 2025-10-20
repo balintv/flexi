@@ -139,10 +139,9 @@ st.set_page_config(page_title="Flexi bérlet ajánló", layout="centered", page_
 
 st.markdown("""
     <style>
-        /* kisebb térköz a checkboxok között */
-        div[data-testid="stCheckbox"] {
-            margin-top: 0.1rem;
-            margin-bottom: 0.1rem;  /* alapértelmezett ~1rem helyett */
+        /* Csökkenti a checkboxok közötti vertikális térközt */
+        div.row-widget.stCheckbox {
+            margin-bottom: -10px;
         }
     </style>
 """, unsafe_allow_html=True)
