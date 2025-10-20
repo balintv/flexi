@@ -56,11 +56,15 @@ def legjobb_flexi_ajanlat(lista_ar_alkalom: float, alkalmak: int):
 
 st.set_page_config(page_title="Flexi bérlet ajánló", layout="centered")
 
-st.title("Flexi bérlet ajánló")
+st.title("Flexi bérlet kalkulátor")
 st.markdown("""
 Segít meghatározni, hogy **melyik Flexi bérlet vagy bérletkombináció**
-a legjobb ajánlat egy adott kezeléshez. 
+a legjobb ajánlat egy adott kezeléshez.  
+Add meg a kezelés **listaárát** és az **alkalmak számát**:
 """)
+
+# Kijelzési mód választó
+display_mode = st.radio("Megjelenítési mód:", ["📊 Metrikus nézet", "🎁 Ajánló nézet"])
 
 # ========== ÚJ KEZELÉSVÁLASZTÓ RÉSZ ==========
 
