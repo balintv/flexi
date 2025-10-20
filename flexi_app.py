@@ -184,7 +184,9 @@ if kivalasztott:
         ]
     )
 
-    st.table(df_kosar.style.hide(axis="index"))
+    df_kosar = df_kosar.reset_index(drop=True)
+    st.table(df_kosar)
+
     st.info(f"**Teljes csomag listaáron:** {osszes_ar:,} Ft".replace(",", " "))
 
     st.divider()
