@@ -57,18 +57,11 @@ def legjobb_flexi_ajanlat(lista_ar_alkalom: float, alkalmak: int):
 st.set_page_config(page_title="Flexi bérlet tervező", layout="centered")
 
 st.title("Flexi bérlet tervező")
-st.markdown("""
-Segít meghatározni, hogy **melyik Flexi bérlet vagy bérletkombináció**
-a legjobb ajánlat egy adott kezeléshez.  
-Add meg a kezelés **listaárát** és az **alkalmak számát**:
-""")
 
 # Kijelzési mód választó
 display_mode = st.radio("Nézet:", ["🎁 Ajánló", "📊 Metrikus"])
 
 # ========== ÚJ KEZELÉSVÁLASZTÓ RÉSZ ==========
-st.subheader("Kezelések kiválasztása")
-
 # nem kiválasztása
 nem = st.radio("Nem:", ["Hölgy", "Férfi"])
 
@@ -154,8 +147,6 @@ ARLISTA = {
 }
 
 # kezelések kiválasztása kategóriánként
-st.markdown("#### Területek és alkalmak:")
-
 kivalasztott = []
 for meret, teruletek in ARLISTA[nem].items():
     st.markdown(f"##### {meret}")
