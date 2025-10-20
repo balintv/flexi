@@ -143,6 +143,9 @@ st.markdown("""
         div.row-widget.stCheckbox {
             margin-bottom: -12px;
         }
+        div.row-widget.stNumberInput {
+            margin-bottom: -12px;
+        }
     </style>
 """, unsafe_allow_html=True)
 
