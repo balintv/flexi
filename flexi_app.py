@@ -148,9 +148,16 @@ ARLISTA = {
 
 kivalasztott = []
 
-# minden árkategória külön expanderben
 for meret, teruletek in ARLISTA[nem].items():
-    with st.expander(f"{meret}"):
+    # méret- és ár cím (pl. XS – 19 900 Ft / alkalom)
+    st.markdown(f"**{meret}**")
+
+    # testrészek listája második sorban, vesszővel elválasztva
+    testrész_lista = ", ".join(list(teruletek.keys()))
+    st.caption(testrész_lista)
+
+    # expander maga csak a kiválasztást tartalmazza
+    with st.expander("Területek"):
         for testrész, ar in teruletek.items():
             col1, col2 = st.columns([3, 1])
             with col1:
@@ -162,7 +169,9 @@ for meret, teruletek in ARLISTA[nem].items():
                     )
                     kivalasztott.append({"testrész": testrész, "alkalom": alkalom, "ar": ar})
 
-# összesítés
+    st.markdown("---")  # vizuális elválasztás a kategóriák között
+
+# összegzés
 osszes_ar = sum(k["ar"] * k["alkalom"] for k in kivalasztott)
 
 if kivalasztott:
