@@ -244,7 +244,11 @@ if st.button("Számolás"):
                     )
                     ajandek_sor = ""
 
-                st.markdown(f"### 💜 {kombi} bérlettel")
+                # ha a Flexi bérlet drágább, mint a listaár → írja ki az árat is a címbe
+                if flexi_ar_int > lista_ar_int:
+                    st.markdown(f"### 💜 {kombi} bérlet {flexi_ar}-ért")
+                else:
+                    st.markdown(f"### 💜 {kombi} bérlettel")
                 st.markdown(f"#### {ar_sor}")
                 if ajandek_sor:
                     st.markdown(f"##### {ajandek_sor}")
