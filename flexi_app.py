@@ -175,7 +175,7 @@ if kivalasztott:
     df_kosar = pd.DataFrame(
         [
             {
-                "Testrész": k["testrész"],
+                "Terület": k["testrész"],
                 "Alkalmak száma": k["alkalom"],
                 "Ár / alkalom (Ft)": f"{k['ar']:,}".replace(",", " "),
                 "Részösszeg (Ft)": f"{k['ar'] * k['alkalom']:,}".replace(",", " "),
@@ -184,7 +184,7 @@ if kivalasztott:
         ]
     )
 
-    st.table(df_kosar)
+    st.table(df_kosar.style.hide(axis="index"))
     st.info(f"**Teljes csomag listaáron:** {osszes_ar:,} Ft".replace(",", " "))
 
     st.divider()
