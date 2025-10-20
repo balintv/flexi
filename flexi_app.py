@@ -141,7 +141,7 @@ st.markdown("""
     <style>
         /* Csökkenti a checkboxok közötti vertikális térközt */
         div.row-widget.stCheckbox {
-            margin-bottom: -10px;
+            margin-bottom: -12px;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -169,7 +169,7 @@ for meret, teruletek in ARLISTA[nem].items():
                     step=1,
                     value=1,
                     key=f"{nem}_{testrész}_alkalom",
-                    label_visibility="visible"
+                    label_visibility="hidden"
                 )
                 kivalasztott.append({"testrész": testrész, "alkalom": alkalom, "ar": ar})
 
