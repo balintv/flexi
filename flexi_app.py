@@ -71,7 +71,7 @@ display_mode = st.radio("Nézet:", ["🎁 Ajánló", "📊 Metrikus"])
 st.subheader("Kezelések kiválasztása")
 
 # nem kiválasztása
-nem = st.radio("Nemet:", ["Hölgy", "Férfi"])
+nem = st.radio("Nem:", ["Hölgy", "Férfi"])
 
 # árlista méretkategóriákkal
 ARLISTA = {
@@ -92,7 +92,7 @@ ARLISTA = {
 }
 
 # kezelések kiválasztása kategóriánként
-st.markdown("#### Jelölje be a kezelendő területeket és adja meg az alkalomszámot:")
+st.markdown("#### Területek és alkalmak:")
 
 kivalasztott = []
 for meret, teruletek in ARLISTA[nem].items():
