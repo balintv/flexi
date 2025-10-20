@@ -146,28 +146,23 @@ ARLISTA = {
     }
 }
 
-# kezelések kiválasztása kategóriánként
-kategoria_lista = list(ARLISTA[nem].keys())
+kivalasztott = []
 
-# egyetlen legördülő menü a kategória kiválasztásához
-kivalasztott_kategoria = st.selectbox("Válassz méretkategóriát:", kategoria_lista)
+# minden árkategória külön expanderben
+for meret, teruletek in ARLISTA[nem].items():
+    with st.expander(f"{meret}"):
+        for testrész, ar in teruletek.items():
+            col1, col2 = st.columns([3, 1])
+            with col1:
+                jelol = st.checkbox(f"{testrész}", key=f"{nem}_{testrész}")
+            with col2:
+                if jelol:
+                    alkalom = st.number_input(
+                        "Alkalmak", min_value=1, max_value=10, step=1, value=1, key=f"{nem}_{testrész}_alkalom"
+                    )
+                    kivalasztott.append({"testrész": testrész, "alkalom": alkalom, "ar": ar})
 
-# csak a kiválasztott kategória expanderben nyílik le
-with st.expander(f"{kivalasztott_kategoria} – kattints a részletekhez"):
-    kivalasztott = []
-    for testrész, ar in ARLISTA[nem][kivalasztott_kategoria].items():
-        col1, col2 = st.columns([3, 1])
-        with col1:
-            jelol = st.checkbox(f"{testrész}", key=f"{nem}_{testrész}")
-        with col2:
-            if jelol:
-                alkalom = st.number_input(
-                    "Alkalmak", min_value=1, max_value=10, step=1, value=1, key=f"{nem}_{testrész}_alkalom"
-                )
-                kivalasztott.append({"testrész": testrész, "alkalom": alkalom, "ar": ar})
-
-# ha a felhasználó már választott korábban mást, a checkbox állapotok megmaradnak
-# összegezzük az árakat minden kategóriából
+# összesítés
 osszes_ar = sum(k["ar"] * k["alkalom"] for k in kivalasztott)
 
 if kivalasztott:
