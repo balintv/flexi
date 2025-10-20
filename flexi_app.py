@@ -168,7 +168,7 @@ div[data-testid="stNumberInputContainer"] {
 /* NUMBER INPUT KONTAINER SZOROSÍTÁSA */
 div[data-testid="stNumberInputContainer"] {
     margin-top: -15px !important;
-    margin-bottom: -15px !important;
+    margin-bottom: -20px !important;
 }
 </style>
 """, unsafe_allow_html=True)
