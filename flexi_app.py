@@ -138,16 +138,33 @@ def legjobb_flexi_ajanlat(lista_ar_alkalom: float, alkalmak: int):
 st.set_page_config(page_title="Flexi bérlet ajánló", layout="centered", page_icon="👛")
 
 st.markdown("""
-    <style>
-        /* Csökkenti a checkboxok közötti vertikális térközt */
-        div.row-widget.stCheckbox {
-            margin-bottom: -12px;
-        }
-        div.row-widget.stNumberInput {
-            margin-bottom: -12px;
-            margin-top: -12px;
-        }
-    </style>
+<style>
+/* CHECKBOX SPACING */
+div.row-widget.stCheckbox {
+    margin-bottom: -12px;
+}
+
+/* NUMBER INPUT SPACING (amikor megjelenik dinamikusan) */
+div[data-testid="stNumberInput"] {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    margin-top: -10px !important;
+    margin-bottom: -10px !important;
+}
+
+/* NUMBER INPUT KONTAINER SZOROSÍTÁSA */
+div[data-testid="stNumberInputContainer"] {
+    margin-top: -4px !important;
+    margin-bottom: -8px !important;
+}
+
+/* A mező kisebb legyen vizuálisan */
+div[data-testid="stNumberInput"] input {
+    height: 1.8em !important;
+    padding: 2px 4px !important;
+    font-size: 0.9rem !important;
+}
+</style>
 """, unsafe_allow_html=True)
 
 # nem kiválasztása
