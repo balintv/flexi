@@ -141,7 +141,7 @@ st.markdown("""
 <style>
 /* CHECKBOX SPACING */
 div.row-widget.stCheckbox {
-    margin-bottom: -15px !important;
+    margin-bottom: -10px !important;
 }
 
 /* NUMBER INPUT SPACING (amikor megjelenik dinamikusan) */
