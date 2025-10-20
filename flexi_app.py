@@ -135,16 +135,17 @@ def legjobb_flexi_ajanlat(lista_ar_alkalom: float, alkalmak: int):
 
 # ========== Streamlit UI ==========
 
-st.set_page_config(page_title="Flexi bérlet tervező", layout="centered")
+st.set_page_config(page_title="Flexi bérlet ajánló", layout="centered")
 
-st.title("Flexi bérlet tervező")
+st.title("Flexi bérlet ajánló")
 
-# Kijelzési mód választó
+# kijelzési mód választó
 display_mode = st.radio("Nézet:", ["🎁 Ajánló", "📊 Metrikus"])
 
-# ========== ÚJ KEZELÉSVÁLASZTÓ RÉSZ ==========
 # nem kiválasztása
 nem = st.radio("Nem:", ["Hölgy", "Férfi"])
+
+st.markdown("&nbsp;", unsafe_allow_html=True)
 
 kivalasztott = []
 
