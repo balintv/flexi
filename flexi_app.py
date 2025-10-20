@@ -185,7 +185,7 @@ if kivalasztott:
     )
 
     df_kosar.index = [""] * len(df_kosar)
-    st.table(df_kosar)
+    st.table(df_kosar, border="horizontal")
 
     st.info(f"**Teljes csomag listaáron:** {osszes_ar:,} Ft".replace(",", " "))
 
