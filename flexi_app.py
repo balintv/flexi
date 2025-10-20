@@ -137,7 +137,6 @@ def legjobb_flexi_ajanlat(lista_ar_alkalom: float, alkalmak: int):
 
 st.set_page_config(page_title="Flexi bérlet ajánló", layout="centered")
 
-st.title("Flexi bérlet ajánló")
 
 # kijelzési mód választó
 display_mode = st.radio("Nézet:", ["🎁 Ajánló", "📊 Metrikus"])
@@ -169,6 +168,8 @@ for meret, teruletek in ARLISTA[nem].items():
                     key=f"{nem}_{testrész}_alkalom"
                 )
                 kivalasztott.append({"testrész": testrész, "alkalom": alkalom, "ar": ar})
+                
+    st.markdown("&nbsp;", unsafe_allow_html=True)
 
 # összegzés
 osszes_ar = sum(k["ar"] * k["alkalom"] for k in kivalasztott)
