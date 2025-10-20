@@ -137,6 +137,18 @@ def legjobb_flexi_ajanlat(lista_ar_alkalom: float, alkalmak: int):
 
 st.set_page_config(page_title="Flexi bérlet ajánló", layout="centered", page_icon="👛")
 
+st.markdown("""
+    <style>
+        /* kisebb térköz a checkboxok között */
+        div[data-testid="stCheckbox"] {
+            margin-bottom: 0.3rem;  /* alapértelmezett ~1rem helyett */
+        }
+
+        /* ha nagyon sűrű kell: margin-bottom: 0.1rem; */
+        /* ha levegősebb: margin-bottom: 0.6rem; */
+    </style>
+""", unsafe_allow_html=True)
+
 # nem kiválasztása
 nem = st.radio("Páciens neme:", ["Nő", "Férfi"])
 
