@@ -138,8 +138,7 @@ def legjobb_flexi_ajanlat(lista_ar_alkalom: float, alkalmak: int):
 st.set_page_config(page_title="Flexi bérlet ajánló", layout="centered")
 
 # nem kiválasztása
-st.markdown(f"##### Páciens neme")
-nem = st.radio("Nem:", ["Hölgy", "Férfi"], label_visibility="hidden")
+nem = st.radio("##### Páciens neme:", ["Nő", "Férfi"])
 
 st.markdown("&nbsp;", unsafe_allow_html=True)
 
