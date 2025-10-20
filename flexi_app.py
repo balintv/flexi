@@ -252,3 +252,26 @@ if st.button("Számolás"):
                     if ajandek_sor:
                         st.markdown(f"##### {ajandek_sor}")
                     st.divider()
+
+            # <<< KÖZELI BÉRLET AJÁNLÁS >>>
+            KOZELI_KUSZOB = 20000  # Ft
+            aktualis_ar = int(legjobb["Flexi ára"])
+            aktualis_ertek = int(legjobb["Flexi értéke"])
+
+            sorted_berletek = sorted(BERLETEK, key=lambda b: b["ar"])
+
+            for b in sorted_berletek:
+                if b["ar"] > aktualis_ar and (b["ar"] - aktualis_ar) <= KOZELI_KUSZOB:
+                    ar_kulonbseg = b["ar"] - aktualis_ar
+                    extra_ertek = b["ertek"] - aktualis_ertek
+                    st.markdown(
+                        f"""
+                        <div style='background-color:#f7f3fc; border-radius:10px; padding:12px; margin-top:10px;'>
+                        💡 <b>Tipp:</b> ha <b>+{ar_kulonbseg:,} Ft</b>-ot fizet,
+                        <b>+{extra_ertek:,} Ft</b> értékkel több kezelést kaphat a
+                        <b>{b['nev']}</b> bérlettel.
+                        </div>
+                        """.replace(",", " "),
+                        unsafe_allow_html=True
+                    )
+                    break
