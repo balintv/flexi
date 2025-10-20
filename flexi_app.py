@@ -157,6 +157,13 @@ div[data-testid="stNumberInputContainer"] {
     margin-top: -10px !important;
     margin-bottom: -8px !important;
 }
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding: 2px 0;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -169,8 +176,9 @@ kivalasztott = []
 for meret, teruletek in ARLISTA[nem].items():
     st.markdown(f"##### {meret}")
 
-    # testrészek listája checkboxokkal
     for testrész, ar in teruletek.items():
+        # egy sorba tesszük, vizuális kapcsolattal
+        st.markdown("<div class='checkbox-row'>", unsafe_allow_html=True)
         col1, col2 = st.columns([3, 1])
         with col1:
             jelol = st.checkbox(f"{testrész}", key=f"{nem}_{testrész}")
@@ -178,14 +186,12 @@ for meret, teruletek in ARLISTA[nem].items():
             if jelol:
                 alkalom = st.number_input(
                     "Alkalmak",
-                    min_value=1,
-                    max_value=10,
-                    step=1,
-                    value=1,
+                    min_value=1, max_value=10, step=1, value=1,
                     key=f"{nem}_{testrész}_alkalom",
                     label_visibility="hidden"
                 )
                 kivalasztott.append({"testrész": testrész, "alkalom": alkalom, "ar": ar})
+        st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown("&nbsp;", unsafe_allow_html=True)
 
