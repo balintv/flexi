@@ -95,7 +95,7 @@ st.markdown("#### Területek és alkalmak:")
 
 kivalasztott = []
 for meret, teruletek in ARLISTA[nem].items():
-    st.markdown(f"### {meret} területek")
+    st.markdown(f"## {meret}")
     for testrész, ar in teruletek.items():
         col1, col2 = st.columns([3, 1])
         with col1:
