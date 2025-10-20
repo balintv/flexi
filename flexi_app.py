@@ -141,7 +141,7 @@ st.markdown("""
 <style>
 /* CHECKBOX SPACING */
 div.row-widget.stCheckbox {
-    margin-bottom: -10px;
+    margin-bottom: -15px;
 }
 
 /* NUMBER INPUT SPACING (amikor megjelenik dinamikusan) */
@@ -149,13 +149,13 @@ div[data-testid="stNumberInput"] {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
     margin-top: -10px !important;
-    margin-bottom: -10px !important;
+    margin-bottom: -15px !important;
 }
 
 /* NUMBER INPUT KONTAINER SZOROSÍTÁSA */
 div[data-testid="stNumberInputContainer"] {
     margin-top: -10px !important;
-    margin-bottom: -10px !important;
+    margin-bottom: -15px !important;
 }
 .checkbox-row {
     display: flex;
