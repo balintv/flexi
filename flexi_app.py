@@ -225,6 +225,16 @@ if kivalasztott:
 
     st.divider()
 
+    st.markdown("""
+        <div style="
+            background-color: #f8f4fc;
+            border: 1px solid #e8d9f9;
+            border-radius: 12px;
+            padding: 20px 25px;
+            margin: 20px 0;
+        ">
+    """, unsafe_allow_html=True)
+
     legjobb, minden = legjobb_flexi_ajanlat(osszes_ar, 1)
 
     kombinacio_szoveg = legjobb["Kombináció"].replace("Flexi", "").replace(" + ", "+").strip()
@@ -254,16 +264,6 @@ if kivalasztott:
             f"így {osszes_tobblet_szoveg} forintot spórol a következő kezelésein!"
         )
         ajandek_sor = ""
-
-    st.markdown("""
-        <div style="
-            background-color: #f8f4fc;
-            border: 1px solid #e8d9f9;
-            border-radius: 12px;
-            padding: 20px 25px;
-            margin: 20px 0;
-        ">
-    """, unsafe_allow_html=True)
 
     # ha a Flexi bérlet drágább, mint a listaár → írja ki az árat is a címbe
     if flexi_ar_int > lista_ar_int:
@@ -305,7 +305,7 @@ if kivalasztott:
                 break
 
     st.markdown("</div>", unsafe_allow_html=True)
-    
+
     st.divider()
 
     st.metric("Listaáron fizetne", f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " "))
