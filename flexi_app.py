@@ -299,7 +299,7 @@ if kivalasztott:
 
                 st.markdown(
                     f"""
-                    <div style='background-color:#f7f3fc; border-radius:10px; padding:12px; margin-top:0px; margin-bottom:20px;'>
+                    <div style='background-color:#f7f3fc; border-radius:10px; padding:12px; margin-top:0px; margin-bottom:30px;'>
                     💡 <b>Tipp:</b> ha <b>+{ar_kulonbseg_szoveg} Ft</b>-ot fizet,
                     <b>+{extra_ertek_szoveg} Ft</b> értékkel több kezelést kaphat a
                     <b>{b['nev']}</b> bérlettel.
