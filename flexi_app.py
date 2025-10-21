@@ -237,10 +237,10 @@ if kivalasztott:
     # árlogika (HTML-kompatibilis formázásokkal)
     if flexi_ar_int < lista_ar_int:
         ar_sor = f"<s>{lista_ar}</s> → <b>{flexi_ar}</b>"
-        ajandek_sor = f"+ {maradek:,} Ft levásárolható érték" if maradek > 0 else "".replace(",", " ")
+        ajandek_sor = f"+ {maradek:,} Ft levásárolható érték".replace(",", " ") if maradek > 0 else ""
     elif flexi_ar_int == lista_ar_int:
         ar_sor = f"<b>{flexi_ar}</b>"
-        ajandek_sor = f"+ {maradek:,} Ft levásárolható érték" if maradek > 0 else "".replace(",", " ")
+        ajandek_sor = f"+ {maradek:,} Ft levásárolható érték".replace(",", " ") if maradek > 0 else ""
     else:
         plusz_fizet = flexi_ar_int - lista_ar_int
         osszes_tobblet = maradek - plusz_fizet
