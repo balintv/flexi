@@ -223,8 +223,6 @@ if kivalasztott:
 
     st.info(f"**Teljes csomag listaáron:** {osszes_ar:,} Ft".replace(",", " "))
 
-    st.divider()
-
     legjobb, minden = legjobb_flexi_ajanlat(osszes_ar, 1)
 
     kombinacio_szoveg = legjobb["Kombináció"].replace("Flexi", "").replace(" + ", "+").strip()
@@ -239,10 +237,10 @@ if kivalasztott:
     # árlogika (HTML-kompatibilis formázásokkal)
     if flexi_ar_int < lista_ar_int:
         ar_sor = f"<s>{lista_ar}</s> → <b>{flexi_ar}</b>"
-        ajandek_sor = f"+ {maradek:,} Ft levásárolható érték" if maradek > 0 else ""
+        ajandek_sor = f"+ {maradek:,} Ft levásárolható érték" if maradek > 0 else "".replace(",", " ")
     elif flexi_ar_int == lista_ar_int:
         ar_sor = f"<b>{flexi_ar}</b>"
-        ajandek_sor = f"+ {maradek:,} Ft levásárolható érték" if maradek > 0 else ""
+        ajandek_sor = f"+ {maradek:,} Ft levásárolható érték" if maradek > 0 else "".replace(",", " ")
     else:
         plusz_fizet = flexi_ar_int - lista_ar_int
         osszes_tobblet = maradek - plusz_fizet
@@ -308,8 +306,6 @@ if kivalasztott:
                     unsafe_allow_html=True
                 )
                 break
-
-    st.divider()
 
     st.metric("Listaáron fizetne", f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " "))
     #st.metric("💡 Flexi ajánlat", f"Flexi{kombinacio_szoveg}")
