@@ -255,6 +255,16 @@ if kivalasztott:
         )
         ajandek_sor = ""
 
+    st.markdown("""
+        <div style="
+            background-color: #f8f4fc;
+            border: 1px solid #e8d9f9;
+            border-radius: 12px;
+            padding: 20px 25px;
+            margin: 20px 0;
+        ">
+    """, unsafe_allow_html=True)
+
     # ha a Flexi bérlet drágább, mint a listaár → írja ki az árat is a címbe
     if flexi_ar_int > lista_ar_int:
         st.markdown(f"### 💜 {kombi} bérlet {flexi_ar}-ért")
@@ -294,6 +304,8 @@ if kivalasztott:
                 )
                 break
 
+    st.markdown("</div>", unsafe_allow_html=True)
+    
     st.divider()
 
     st.metric("Listaáron fizetne", f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " "))
