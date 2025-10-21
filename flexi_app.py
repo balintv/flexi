@@ -309,26 +309,34 @@ if kivalasztott:
                 )
                 break
 
-    st.metric("Listaáron fizetne", f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " "))
-    #st.metric("💡 Flexi ajánlat", f"Flexi{kombinacio_szoveg}")
+    col1, col2, col3 = st.columns(3)
 
-    flexi_ar = int(legjobb["Flexi ára"])
-    megtakaritas = (int(legjobb["Megtakarítás (Ft)"])) * -1
-    st.metric(
-        label="💰 Ajánlat ára",
-        value=f"{flexi_ar:,} Ft".replace(",", " "),
-        delta=f"{megtakaritas:,} Ft".replace(",", " "),
-        delta_color="normal"
-    )
+    with col1:
+        st.metric(
+            label="Listaáron fizetne",
+            value=f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " ")
+        )
 
-    flexi_ertek = int(legjobb["Flexi értéke"])
-    maradek = int(legjobb["Maradék érték (Ft)"])
-    st.metric(
-        label="💼 Ajánlat teljes értéke",
-        value=f"{flexi_ertek:,} Ft".replace(",", " "),
-        delta=f"{maradek:,} Ft marad a bérletén".replace(",", " "),
-        delta_color="normal"
-    )
+    with col2:
+        flexi_ar = int(legjobb["Flexi ára"])
+        megtakaritas = (int(legjobb["Megtakarítás (Ft)"])) * -1
+        st.metric(
+            label="💰 Ajánlat ára",
+            value=f"{flexi_ar:,} Ft".replace(",", " "),
+            delta=f"{megtakaritas:,} Ft".replace(",", " "),
+            delta_color="normal"
+        )
+
+    with col3:
+        flexi_ertek = int(legjobb["Flexi értéke"])
+        maradek = int(legjobb["Maradék érték (Ft)"])
+        st.metric(
+            label="💼 Ajánlat teljes értéke",
+            value=f"{flexi_ertek:,} Ft".replace(",", " "),
+            delta=f"{maradek:,} Ft marad a bérletén".replace(",", " "),
+            delta_color="normal"
+        )
+
 
 else:
     st.warning("Válassz legalább egy kezelést a számításhoz!")
