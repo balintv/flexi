@@ -341,26 +341,26 @@ if kivalasztott:
 else:
     st.warning("Válassz legalább egy kezelést a számításhoz!")
 
-st.divider()
+# st.divider()
 
-# bérletek táblázata
-df_berletek = pd.DataFrame(BERLETEK)
+# # bérletek táblázata
+# df_berletek = pd.DataFrame(BERLETEK)
 
-# oszlopok átnevezése és formázása
-df_berletek = df_berletek.rename(columns={
-    "nev": "Bérlet típusa",
-    "ar": "Bérlet ára (Ft)",
-    "ertek": "Felhasználható érték (Ft)"
-})
-df_berletek["Megtakarítás (Ft)"] = df_berletek["Felhasználható érték (Ft)"] - df_berletek["Bérlet ára (Ft)"]
+# # oszlopok átnevezése és formázása
+# df_berletek = df_berletek.rename(columns={
+#     "nev": "Bérlet típusa",
+#     "ar": "Bérlet ára (Ft)",
+#     "ertek": "Felhasználható érték (Ft)"
+# })
+# df_berletek["Megtakarítás (Ft)"] = df_berletek["Felhasználható érték (Ft)"] - df_berletek["Bérlet ára (Ft)"]
 
-# magyar formátum (ezres elválasztó szóközzel)
-df_berletek["Bérlet ára (Ft)"] = df_berletek["Bérlet ára (Ft)"].map(lambda x: f"{x:,}".replace(",", " "))
-df_berletek["Felhasználható érték (Ft)"] = df_berletek["Felhasználható érték (Ft)"].map(lambda x: f"{x:,}".replace(",", " "))
-df_berletek["Megtakarítás (Ft)"] = df_berletek["Megtakarítás (Ft)"].map(lambda x: f"{x:,}".replace(",", " "))
+# # magyar formátum (ezres elválasztó szóközzel)
+# df_berletek["Bérlet ára (Ft)"] = df_berletek["Bérlet ára (Ft)"].map(lambda x: f"{x:,}".replace(",", " "))
+# df_berletek["Felhasználható érték (Ft)"] = df_berletek["Felhasználható érték (Ft)"].map(lambda x: f"{x:,}".replace(",", " "))
+# df_berletek["Megtakarítás (Ft)"] = df_berletek["Megtakarítás (Ft)"].map(lambda x: f"{x:,}".replace(",", " "))
 
-# üres index
-df_berletek.index = [""] * len(df_berletek)
+# # üres index
+# df_berletek.index = [""] * len(df_berletek)
 
-# táblázat megjelenítése
-st.table(df_berletek, border="horizontal")
+# # táblázat megjelenítése
+# st.table(df_berletek, border="horizontal")
