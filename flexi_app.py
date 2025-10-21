@@ -201,6 +201,8 @@ for meret, teruletek in ARLISTA[nem].items():
 
     st.markdown("&nbsp;", unsafe_allow_html=True)
 
+st.divider()
+
 # Eredmény
 osszes_ar = sum(k["ar"] * k["alkalom"] for k in kivalasztott)
 
