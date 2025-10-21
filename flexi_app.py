@@ -255,53 +255,67 @@ if kivalasztott:
         )
         ajandek_sor = ""
 
-        st.markdown(
-            f"""
-            <div style="
-                background-color:#f8f4fc;
-                border:1px solid #e8d9f9;
-                border-radius:12px;
-                padding:20px 25px;
-                margin:25px 0;
-            ">
-                <h3 style="color:#8C00D2; margin-bottom:6px;">
-                    💜 {kombi} bérlet{' ' + flexi_ar if flexi_ar_int > lista_ar_int else ''}
-                </h3>
-                <p style="font-size:18px; margin:0 0 8px 0;">{ar_sor}</p>
-                {f"<p style='margin-top:0; font-size:16px; color:#333;'>{ajandek_sor}</p>" if ajandek_sor else ""}
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+    # --- ajánlati blokk HTML-ben (biztonságos, egységes render) ---
+    cim_html = (
+        f"<h3 style='color:#8C00D2; margin-bottom:6px;'>💜 {kombi} bérlet {flexi_ar}-ért</h3>"
+        if flexi_ar_int > lista_ar_int
+        else f"<h3 style='color:#8C00D2; margin-bottom:6px;'>💜 {kombi} bérlettel</h3>"
+    )
 
-        # közeli bérlet ajánlás külön, önálló markdown-ban
-        if int(legjobb["Flexi ára"]) < int(legjobb["Listaáron fizetne"]):
-            KOZELI_KUSZOB = 45000
-            aktualis_ar = int(legjobb["Flexi ára"])
-            aktualis_ertek = int(legjobb["Flexi értéke"])
-            sorted_berletek = sorted(BERLETEK, key=lambda b: b["ar"])
-            for b in sorted_berletek:
-                if b["ar"] > aktualis_ar and (b["ar"] - aktualis_ar) <= KOZELI_KUSZOB:
-                    ar_kulonbseg = b["ar"] - aktualis_ar
-                    extra_ertek = b["ertek"] - aktualis_ertek
-                    ar_kulonbseg_szoveg = f"{ar_kulonbseg:,}".replace(",", " ")
-                    extra_ertek_szoveg = f"{extra_ertek:,}".replace(",", " ")
+    ar_html = f"<p style='font-size:18px; margin:0 0 6px 0;'>{ar_sor}</p>"
+    ajandek_html = (
+        f"<p style='font-size:16px; color:#333; margin:0 0 6px 0;'>{ajandek_sor}</p>"
+        if ajandek_sor
+        else ""
+    )
 
-                    st.markdown(
-                        f"""
-                        <div style='background-color:#f7f3fc;
-                                    border-radius:10px;
-                                    padding:12px;
-                                    margin-top:-10px;
-                                    margin-bottom:20px;'>
-                            💡 <b>Tipp:</b> ha <b>+{ar_kulonbseg_szoveg} Ft</b>-ot fizet,
-                            <b>+{extra_ertek_szoveg} Ft</b> értékkel több kezelést kaphat a
-                            <b>{b['nev']}</b> bérlettel.
-                        </div>
-                        """,
-                        unsafe_allow_html=True
-                    )
-                    break
+    # teljes blokk összeállítása világoslila háttérrel
+    st.markdown(
+        f"""
+        <div style="
+            background-color:#f8f4fc;
+            border:1px solid #e8d9f9;
+            border-radius:12px;
+            padding:20px 25px;
+            margin:25px 0;
+        ">
+            {cim_html}
+            {ar_html}
+            {ajandek_html}
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # <<< KÖZELI BÉRLET AJÁNLÁS >>>
+    # Csak akkor ajánljon, ha a legjobb bérlet ára alacsonyabb, mint a listaár
+    if int(legjobb["Flexi ára"]) < int(legjobb["Listaáron fizetne"]):
+        KOZELI_KUSZOB = 45000  # Ft – paraméterezhető küszöb
+        aktualis_ar = int(legjobb["Flexi ára"])
+        aktualis_ertek = int(legjobb["Flexi értéke"])
+
+        # az összes bérletet ár szerint rendezzük
+        sorted_berletek = sorted(BERLETEK, key=lambda b: b["ar"])
+
+        # megkeressük, van-e a mostanihoz közel árban nagyobb flexi
+        for b in sorted_berletek:
+            if b["ar"] > aktualis_ar and (b["ar"] - aktualis_ar) <= KOZELI_KUSZOB:
+                ar_kulonbseg = b["ar"] - aktualis_ar
+                extra_ertek = b["ertek"] - aktualis_ertek
+                ar_kulonbseg_szoveg = f"{ar_kulonbseg:,}".replace(",", " ")
+                extra_ertek_szoveg = f"{extra_ertek:,}".replace(",", " ")
+
+                st.markdown(
+                    f"""
+                    <div style='background-color:#f7f3fc; border-radius:10px; padding:12px; margin-top:10px; margin-bottom:20px;'>
+                    💡 <b>Tipp:</b> ha <b>+{ar_kulonbseg_szoveg} Ft</b>-ot fizet,
+                    <b>+{extra_ertek_szoveg} Ft</b> értékkel több kezelést kaphat a
+                    <b>{b['nev']}</b> bérlettel.
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+                break
 
     st.divider()
 
