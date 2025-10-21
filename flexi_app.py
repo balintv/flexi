@@ -236,13 +236,13 @@ if kivalasztott:
     flexi_ar = f"{flexi_ar_int:,} Ft".replace(",", " ")
     lista_ar = f"{lista_ar_int:,} Ft".replace(",", " ")
 
-    # Árlogika
+    # árlogika (HTML-kompatibilis formázásokkal)
     if flexi_ar_int < lista_ar_int:
-        ar_sor = f"~~{lista_ar}~~ → **{flexi_ar}**"
-        ajandek_sor = f"+ {maradek:,} Ft levásárolható érték".replace(",", " ") if maradek > 0 else ""
+        ar_sor = f"<s>{lista_ar}</s> → <b>{flexi_ar}</b>"
+        ajandek_sor = f"+ {maradek:,} Ft levásárolható érték" if maradek > 0 else ""
     elif flexi_ar_int == lista_ar_int:
-        ar_sor = f"**{flexi_ar}**"
-        ajandek_sor = f"+ {maradek:,} Ft levásárolható érték".replace(",", " ") if maradek > 0 else ""
+        ar_sor = f"<b>{flexi_ar}</b>"
+        ajandek_sor = f"+ {maradek:,} Ft levásárolható érték" if maradek > 0 else ""
     else:
         plusz_fizet = flexi_ar_int - lista_ar_int
         osszes_tobblet = maradek - plusz_fizet
@@ -255,21 +255,13 @@ if kivalasztott:
         )
         ajandek_sor = ""
 
-    # --- ajánlati blokk HTML-ben (biztonságos, egységes render) ---
+    # majd jön a HTML-doboz, ahogy eddig:
     cim_html = (
         f"<h3 style='color:#8C00D2; margin-bottom:6px;'>💜 {kombi} bérlet {flexi_ar}-ért</h3>"
         if flexi_ar_int > lista_ar_int
         else f"<h3 style='color:#8C00D2; margin-bottom:6px;'>💜 {kombi} bérlettel</h3>"
     )
 
-    ar_html = f"<p style='font-size:18px; margin:0 0 6px 0;'>{ar_sor}</p>"
-    ajandek_html = (
-        f"<p style='font-size:16px; color:#333; margin:0 0 6px 0;'>{ajandek_sor}</p>"
-        if ajandek_sor
-        else ""
-    )
-
-    # teljes blokk összeállítása világoslila háttérrel
     st.markdown(
         f"""
         <div style="
@@ -280,8 +272,8 @@ if kivalasztott:
             margin:25px 0;
         ">
             {cim_html}
-            {ar_html}
-            {ajandek_html}
+            <p style='font-size:18px; margin:0 0 6px 0;'>{ar_sor}</p>
+            {f"<p style='font-size:16px; color:#333; margin:0 0 6px 0;'>{ajandek_sor}</p>" if ajandek_sor else ""}
         </div>
         """,
         unsafe_allow_html=True,
