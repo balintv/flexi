@@ -255,50 +255,53 @@ if kivalasztott:
         )
         ajandek_sor = ""
 
-    # összerakjuk az egész HTML-doboz tartalmát
-    html_ajanlat = f"""
-    <div style="
-        background-color:#f8f4fc;
-        border:1px solid #e8d9f9;
-        border-radius:12px;
-        padding:20px 25px;
-        margin:25px 0;
-    ">
-        <h3 style="color:#8C00D2; margin-bottom:6px;">
-            💜 {kombi} bérlet{' ' + flexi_ar if flexi_ar_int > lista_ar_int else ''}
-        </h3>
-        <p style="font-size:18px; margin:0 0 8px 0;">{ar_sor}</p>
-        {f"<p style='margin-top:0; font-size:16px; color:#333;'>{ajandek_sor}</p>" if ajandek_sor else ""}
-    """
+        st.markdown(
+            f"""
+            <div style="
+                background-color:#f8f4fc;
+                border:1px solid #e8d9f9;
+                border-radius:12px;
+                padding:20px 25px;
+                margin:25px 0;
+            ">
+                <h3 style="color:#8C00D2; margin-bottom:6px;">
+                    💜 {kombi} bérlet{' ' + flexi_ar if flexi_ar_int > lista_ar_int else ''}
+                </h3>
+                <p style="font-size:18px; margin:0 0 8px 0;">{ar_sor}</p>
+                {f"<p style='margin-top:0; font-size:16px; color:#333;'>{ajandek_sor}</p>" if ajandek_sor else ""}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
-    # közeli bérlet ajánlás (ha van)
-    if int(legjobb["Flexi ára"]) < int(legjobb["Listaáron fizetne"]):
-        KOZELI_KUSZOB = 45000
-        aktualis_ar = int(legjobb["Flexi ára"])
-        aktualis_ertek = int(legjobb["Flexi értéke"])
-        sorted_berletek = sorted(BERLETEK, key=lambda b: b["ar"])
-        for b in sorted_berletek:
-            if b["ar"] > aktualis_ar and (b["ar"] - aktualis_ar) <= KOZELI_KUSZOB:
-                ar_kulonbseg = b["ar"] - aktualis_ar
-                extra_ertek = b["ertek"] - aktualis_ertek
-                ar_kulonbseg_szoveg = f"{ar_kulonbseg:,}".replace(",", " ")
-                extra_ertek_szoveg = f"{extra_ertek:,}".replace(",", " ")
-                html_ajanlat += f"""
-                <div style='background-color:#f7f3fc;
-                            border-radius:10px;
-                            padding:12px;
-                            margin-top:10px;
-                            margin-bottom:5px;'>
-                    💡 <b>Tipp:</b> ha <b>+{ar_kulonbseg_szoveg} Ft</b>-ot fizet,
-                    <b>+{extra_ertek_szoveg} Ft</b> értékkel több kezelést kaphat a
-                    <b>{b['nev']}</b> bérlettel.
-                </div>
-                """
-                break
+        # közeli bérlet ajánlás külön, önálló markdown-ban
+        if int(legjobb["Flexi ára"]) < int(legjobb["Listaáron fizetne"]):
+            KOZELI_KUSZOB = 45000
+            aktualis_ar = int(legjobb["Flexi ára"])
+            aktualis_ertek = int(legjobb["Flexi értéke"])
+            sorted_berletek = sorted(BERLETEK, key=lambda b: b["ar"])
+            for b in sorted_berletek:
+                if b["ar"] > aktualis_ar and (b["ar"] - aktualis_ar) <= KOZELI_KUSZOB:
+                    ar_kulonbseg = b["ar"] - aktualis_ar
+                    extra_ertek = b["ertek"] - aktualis_ertek
+                    ar_kulonbseg_szoveg = f"{ar_kulonbseg:,}".replace(",", " ")
+                    extra_ertek_szoveg = f"{extra_ertek:,}".replace(",", " ")
 
-    # lezárjuk a dobozt és kirendereljük
-    html_ajanlat += "</div>"
-    st.markdown(html_ajanlat, unsafe_allow_html=True)
+                    st.markdown(
+                        f"""
+                        <div style='background-color:#f7f3fc;
+                                    border-radius:10px;
+                                    padding:12px;
+                                    margin-top:-10px;
+                                    margin-bottom:20px;'>
+                            💡 <b>Tipp:</b> ha <b>+{ar_kulonbseg_szoveg} Ft</b>-ot fizet,
+                            <b>+{extra_ertek_szoveg} Ft</b> értékkel több kezelést kaphat a
+                            <b>{b['nev']}</b> bérlettel.
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+                    break
 
     st.divider()
 
