@@ -207,10 +207,13 @@ if mode == "📊 Mi fér a bérletbe?":
 
     # --- lista a méretkategóriák legolcsóbb árairól (a javaslathoz) ---
     meret_arak = []
-    for meret, kateg_teruletek in ARLISTA[nem].items():  # <--- névütközés javítva
+    for meret, kateg_teruletek in ARLISTA[nem].items():
         legkisebb = min(kateg_teruletek.values())
         meret_arak.append({"meret": meret.split("–")[0].strip(), "ar": legkisebb})
     meret_arak = sorted(meret_arak, key=lambda x: x["ar"])
+
+    # XL ár a korláthoz
+    xl_ar = max(v for d in ARLISTA[nem].values() for v in d.values())
 
     # --- számítás ---
     eredmeny_lista = []
@@ -221,10 +224,10 @@ if mode == "📊 Mi fér a bérletbe?":
         maradek = ertek - (min_alkalom * sum(arak))
         alkalmak = [min_alkalom] * n
 
-        # maradék arányos elosztása
+        # maradék arányos elosztása (max 8 alkalom/t)
         while maradek >= min(arak):
             i = min(range(n), key=lambda j: alkalmak[j])
-            if maradek >= arak[i] and alkalmak[i] < 6:
+            if maradek >= arak[i] and alkalmak[i] < 8:
                 alkalmak[i] += 1
                 maradek -= arak[i]
             else:
@@ -233,6 +236,11 @@ if mode == "📊 Mi fér a bérletbe?":
         felhasznalt = sum(a * ar for a, ar in zip(alkalmak, arak))
         maradek_ertek = ertek - felhasznalt
 
+        # Kihagyás, ha túl nagy a maradék (legalább egy XL-nél több)
+        if maradek_ertek > xl_ar:
+            continue
+
+        # csak akkor jelenítse meg, ha kihasznált
         if b["ar"] <= felhasznalt:
             # javaslat a maradék értékre
             javaslat = None
