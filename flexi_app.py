@@ -272,7 +272,12 @@ if mode == "📊 Mi fér a bérletbe?":
             st.markdown("---")
             col1, col2, col3 = st.columns([1, 1, 1])
             with col1:
-                st.markdown(f"💜 **{e['nev']} bérlet** {e['ar']}-ért")
+                st.markdown(f"💜 **{e['nev']}**")
+                st.markdown(
+                    f"<span style='font-size:18px; color:#111;'>"
+                    f"<s>{e['ertek']}</s> → <b style='color:#8C00D2'>{e['ar']}</b>"
+                    f"</span>",
+                    unsafe_allow_html=True)
             with col2:
                 st.markdown(f"**Mi fér bele?**")
                 st.markdown(e["reszletezes"], unsafe_allow_html=True)
