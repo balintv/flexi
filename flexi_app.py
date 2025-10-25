@@ -13,9 +13,13 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.units import cm
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.platypus import Image
+from reportlab.lib.units import inch
 from reportlab.lib.styles import getSampleStyleSheet
 import io
 import datetime
+from svglib.svglib import svg2rlg
+from reportlab.graphics import renderPDF
 
 # ========== Flexi bérletek és árlista ==========
 BERLETEK = [
@@ -149,10 +153,15 @@ def general_pdf(paciens_nem, kivalasztott, eredmeny_lista):
     styles = getSampleStyleSheet()
     story = []
 
+    drawing = svg2rlg("https://www.barsony.hu/wp-content/uploads/2025/01/barsony-logo-lila.svg")
+    drawing.scale(0.5, 0.5)  # pl. 50%-os méretre
+    story.append(drawing)
+    story.append(Spacer(1, 6))
+
     story.append(Paragraph("<b>Bársony Flexi Bérlet ajánlat</b>", styles["Title"]))
     story.append(Spacer(1, 12))
     story.append(Paragraph(f"Dátum: {datetime.date.today().strftime('%Y.%m.%d.')}", styles["Normal"]))
-    story.append(Paragraph(f"Páciens neme: <b>{paciens_nem}</b>", styles["Normal"]))
+    #story.append(Paragraph(f"Páciens neme: <b>{paciens_nem}</b>", styles["Normal"]))
     story.append(Spacer(1, 12))
 
     # --- kiválasztott kezelések ---
