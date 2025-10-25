@@ -223,7 +223,7 @@ if mode == "📊 Mi fér a bérletbe?":
 
         # alap: minden területből ugyanannyi kör
         min_alkalom = int(ertek // sum(arak))
-        min_alkalom = min(min_alkalom, 8)  # max 8 alkalom
+        min_alkalom = min(min_alkalom, 6)  # max 8 alkalom
 
         maradek = ertek - (min_alkalom * sum(arak))
         alkalmak = [min_alkalom] * n
