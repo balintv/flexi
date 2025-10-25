@@ -184,7 +184,7 @@ nem = st.radio("Páciens neme:", ["Nő", "Férfi"])
 
 st.markdown("&nbsp;", unsafe_allow_html=True)
 
-# ========== ÚJ NÉZET: "Bérletbe mi fér bele?" ==========
+# ========== "Mi fér a bérletbe? ==========
 if mode == "📊 Mi fér a bérletbe?":
     st.markdown("""
     Válaszd ki, mely területeket szeretnéd szőrteleníteni, és nézd meg, hány alkalom fér bele az egyes Flexi bérletekbe.
@@ -220,18 +220,23 @@ if mode == "📊 Mi fér a bérletbe?":
     for b in BERLETEK:
         ertek = b["ertek"]
         n = len(arak)
+
+        # alap: minden területből ugyanannyi kör
         min_alkalom = int(ertek // sum(arak))
+        min_alkalom = min(min_alkalom, 8)  # max 8 alkalom
+
         maradek = ertek - (min_alkalom * sum(arak))
         alkalmak = [min_alkalom] * n
 
-        # maradék arányos elosztása (max 8 alkalom/t)
-        while maradek >= min(arak):
-            i = min(range(n), key=lambda j: alkalmak[j])
-            if maradek >= arak[i] and alkalmak[i] < 8:
-                alkalmak[i] += 1
-                maradek -= arak[i]
-            else:
-                break
+        # maradék elosztása csak ha több terület van
+        if n > 1:
+            while maradek >= min(arak):
+                i = min(range(n), key=lambda j: alkalmak[j])  # mindig a legkevesebb kap
+                if maradek >= arak[i] and alkalmak[i] < 8:
+                    alkalmak[i] += 1
+                    maradek -= arak[i]
+                else:
+                    break
 
         felhasznalt = sum(a * ar for a, ar in zip(alkalmak, arak))
         maradek_ertek = ertek - felhasznalt
@@ -279,7 +284,7 @@ if mode == "📊 Mi fér a bérletbe?":
                 st.markdown(f"**Maradék:** {e['maradek']}")
                 st.caption(e["javaslat"])
 
-# ========== RÉGI NÉZET: Kalkulátor mód ==========
+# ========== "Melyik a legjobb bérlet?" ==========
 else:
     kivalasztott = []
     for meret, teruletek in ARLISTA[nem].items():
