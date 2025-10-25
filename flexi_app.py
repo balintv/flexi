@@ -153,7 +153,7 @@ def general_pdf(paciens_nem, kivalasztott, eredmeny_lista):
 
     logo_path = "https://www.barsony.hu/wp-content/uploads/2025/10/barsony-logo-lila-nyomtatashoz.png"
     try:
-        logo = Image(logo_path, width=3*cm, height=0.76*cm)
+        logo = Image(logo_path, width=5*cm, height=1.27*cm)
         logo.hAlign = 'CENTER'
         story.append(logo)
     except Exception:
