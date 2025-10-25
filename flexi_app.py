@@ -196,7 +196,7 @@ if mode == "📊 Bérletbe mi fér bele?":
         for testrész, ar in teruletek.items():
             if st.checkbox(f"{testrész}".replace(",", " "), key=f"bérlet_{nem}_{testrész}"):
                 kivalasztott.append({"testrész": testrész, "ar": ar})
-                
+
         st.markdown("&nbsp;", unsafe_allow_html=True)
 
     if not kivalasztott:
@@ -231,17 +231,16 @@ if mode == "📊 Bérletbe mi fér bele?":
         reszletezes = ", ".join([f"{t}: {a}x" for t, a in zip(teruletek, alkalmak)])
         eredmeny_lista.append({
             "Bérlet": b["nev"],
-            "Felhasználható érték (Ft)": f"{ertek:,}".replace(",", " "),
-            "Felhasznált érték (Ft)": f"{felhasznalt:,}".replace(",", " "),
-            "Maradék (Ft)": f"{maradek_ertek:,}".replace(",", " "),
-            "Kihasználtság (%)": f"{felhasznalt / ertek * 100:.1f}%",
-            "Részletezés": reszletezes
+            "Bérlet értéke": f"{ertek:,} Ft".replace(",", " "),
+            "Felhasznált érték": f"{felhasznalt:,} Ft".replace(",", " "),
+            "Maradék összeg": f"{maradek_ertek:,} Ft".replace(",", " "),
+            "Mi fér bele?": reszletezes
         })
 
     df = pd.DataFrame(eredmeny_lista)
     df.index = [""] * len(df)
 
-    st.markdown("&nbsp;", unsafe_allow_html=True)
+    st.divider()
 
     st.table(df)
 
