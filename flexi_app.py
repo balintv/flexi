@@ -239,7 +239,7 @@ if mode == "📊 Mi fér a bérletbe?":
             javaslat = None
             for ma in meret_arak:
                 if maradek_ertek >= ma["ar"]:
-                    javaslat = f"Maradékból legalább 1 {ma['meret']} méretű területre elég."
+                    javaslat = f"A maradék legalább 1 {ma['meret']} méretű területre elég."
             if not javaslat:
                 javaslat = "A maradék nem fedez teljes kezelést."
 
@@ -263,9 +263,7 @@ if mode == "📊 Mi fér a bérletbe?":
             st.markdown("---")
             col1, col2, col3 = st.columns([1, 1, 1])
             with col1:
-                st.markdown(f"**{e['nev']}**")
-                st.caption(f"Bérlet ára: {e['ar']}")
-                st.caption(f"Bérlet értéke: {e['ertek']}")
+                st.markdown(f"**{e['nev']}: {e['ar']}**")
             with col2:
                 st.markdown(f"**Mi fér bele?**")
                 st.markdown(e["reszletezes"])
