@@ -326,7 +326,7 @@ else:
             [
                 {
                     " ": k["testrész"],
-                    "Alkalmak száma": k["alkalom"],
+                    "Alkalmak száma": f"{k["alkalom"]} alkalom",
                     "Ár / alkalom (Ft)": f"{k['ar']:,}".replace(",", " "),
                     "Részösszeg (Ft)": f"{k['ar'] * k['alkalom']:,}".replace(",", " "),
                 }
