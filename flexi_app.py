@@ -9,6 +9,14 @@ import itertools
 import pandas as pd
 import streamlit as st
 
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.lib.units import cm
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet
+import io
+import datetime
+
 # ========== Flexi bérletek és árlista ==========
 BERLETEK = [
     {"nev": "Flexi50",  "ar": 45000,  "ertek": 50000},
