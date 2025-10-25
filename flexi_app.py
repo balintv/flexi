@@ -232,7 +232,7 @@ if mode == "📊 Mi fér a bérletbe?":
         if n > 1:
             while maradek >= min(arak):
                 i = min(range(n), key=lambda j: alkalmak[j])  # mindig a legkevesebb kap
-                if maradek >= arak[i] and alkalmak[i] < 8:
+                if maradek >= arak[i] and alkalmak[i] < 6:
                     alkalmak[i] += 1
                     maradek -= arak[i]
                 else:
