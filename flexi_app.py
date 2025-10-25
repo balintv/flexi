@@ -251,11 +251,11 @@ if mode == "📊 Mi fér a bérletbe?":
             javaslat = None
             for ma in meret_arak:
                 if maradek_ertek >= ma["ar"]:
-                    javaslat = f"A maradék legalább 1 {ma['meret']} méretű területre elég."
+                    javaslat = f"A maradék legalább további 1 alkalom {ma['meret']} méretű területre elég."
             if not javaslat:
-                javaslat = "A maradék nem fedez teljes kezelést."
+                javaslat = ""
 
-            reszletezes = ", ".join([f"{t}: {a}x" for t, a in zip(teruletek, alkalmak)])
+            reszletezes = "<br>".join([f"{t}: {a}x" for t, a in zip(teruletek, alkalmak)])
             eredmeny_lista.append({
                 "nev": b["nev"],
                 "ar": f"{b['ar']:,} Ft".replace(",", " "),
@@ -276,10 +276,9 @@ if mode == "📊 Mi fér a bérletbe?":
             col1, col2, col3 = st.columns([1, 1, 1])
             with col1:
                 st.markdown(f"**{e['nev']}: {e['ar']}**")
-                st.caption(f"Értéke: {e['ertek']}")
             with col2:
                 st.markdown(f"**Mi fér bele?**")
-                st.markdown(e["reszletezes"])
+                st.markdown(e["reszletezes"], unsafe_allow_html=True)
             with col3:
                 st.markdown(f"**Maradék:** {e['maradek']}")
                 st.caption(e["javaslat"])
