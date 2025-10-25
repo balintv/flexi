@@ -18,8 +18,6 @@ from reportlab.lib.units import inch
 from reportlab.lib.styles import getSampleStyleSheet
 import io
 import datetime
-from svglib.svglib import svg2rlg
-from reportlab.graphics import renderPDF
 
 # ========== Flexi bérletek és árlista ==========
 BERLETEK = [
@@ -153,9 +151,14 @@ def general_pdf(paciens_nem, kivalasztott, eredmeny_lista):
     styles = getSampleStyleSheet()
     story = []
 
-    drawing = svg2rlg("https://www.barsony.hu/wp-content/uploads/2025/01/barsony-logo-lila.svg")
-    drawing.scale(0.5, 0.5)  # pl. 50%-os méretre
-    story.append(drawing)
+    logo_path = "barsony_logo.png"  # helyi fájl, vagy teljes elérési út
+    try:
+        logo = Image(logo_path, width=3*cm, height=1.2*cm)
+        logo.hAlign = 'CENTER'
+        story.append(logo)
+    except Exception:
+        # ha nincs logó, nem dől el a program
+        story.append(Paragraph("<b>Bársony Klinika</b>", styles["Normal"]))
     story.append(Spacer(1, 6))
 
     story.append(Paragraph("<b>Bársony Flexi Bérlet ajánlat</b>", styles["Title"]))
