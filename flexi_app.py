@@ -151,9 +151,9 @@ def general_pdf(paciens_nem, kivalasztott, eredmeny_lista):
     styles = getSampleStyleSheet()
     story = []
 
-    logo_path = "barsony_logo.png"  # helyi fájl, vagy teljes elérési út
+    logo_path = "https://www.barsony.hu/wp-content/uploads/2025/10/barsony-logo-lila-nyomtatashoz.png"
     try:
-        logo = Image(logo_path, width=3*cm, height=1.2*cm)
+        logo = Image(logo_path, width=3*cm)
         logo.hAlign = 'CENTER'
         story.append(logo)
     except Exception:
