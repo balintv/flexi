@@ -230,10 +230,10 @@ if mode == "📊 Bérletbe mi fér bele?":
         if b["ar"] <= felhasznalt:
             reszletezes = ", ".join([f"{t}: {a}x" for t, a in zip(teruletek, alkalmak)])
             eredmeny_lista.append({
-                "Bérlet": b["nev"],
-                "Mi fér bele?": reszletezes,
+                " ": b["nev"],
                 "Bérlet ára": f"{b['ar']:,} Ft".replace(",", " "),
                 "Bérlet értéke": f"{ertek:,} Ft".replace(",", " "),
+                "Mi fér bele?": reszletezes,
                 "Maradék összeg": f"{maradek_ertek:,} Ft".replace(",", " ")
             })
 
@@ -243,7 +243,7 @@ if mode == "📊 Bérletbe mi fér bele?":
         df = pd.DataFrame(eredmeny_lista)
         df.index = [""] * len(df)
         st.divider()
-        st.table(df)
+        st.table(df, border="horizontal")
 
 # ========== RÉGI NÉZET: Kalkulátor mód ==========
 else:
