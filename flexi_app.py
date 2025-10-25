@@ -255,7 +255,7 @@ if mode == "📊 Mi fér a bérletbe?":
             if not javaslat:
                 javaslat = ""
 
-            reszletezes = "<br>".join([f"{t}: {a}x" for t, a in zip(teruletek, alkalmak)])
+            reszletezes = "<br>".join([f"{t}: {a} alkalom" for t, a in zip(teruletek, alkalmak)])
             eredmeny_lista.append({
                 "nev": b["nev"],
                 "ar": f"{b['ar']:,} Ft".replace(",", " "),
