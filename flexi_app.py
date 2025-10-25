@@ -223,7 +223,7 @@ if mode == "📊 Mi fér a bérletbe?":
 
         # alap: minden területből ugyanannyi kör
         min_alkalom = int(ertek // sum(arak))
-        min_alkalom = min(min_alkalom, 6)  # max 8 alkalom
+        min_alkalom = min(min_alkalom, 8)  # max 8 alkalom
 
         maradek = ertek - (min_alkalom * sum(arak))
         alkalmak = [min_alkalom] * n
@@ -232,7 +232,7 @@ if mode == "📊 Mi fér a bérletbe?":
         if n > 1:
             while maradek >= min(arak):
                 i = min(range(n), key=lambda j: alkalmak[j])  # mindig a legkevesebb kap
-                if maradek >= arak[i] and alkalmak[i] < 6:
+                if maradek >= arak[i] and alkalmak[i] < 8:
                     alkalmak[i] += 1
                     maradek -= arak[i]
                 else:
