@@ -196,6 +196,8 @@ if mode == "📊 Bérletbe mi fér bele?":
         for testrész, ar in teruletek.items():
             if st.checkbox(f"{testrész}".replace(",", " "), key=f"bérlet_{nem}_{testrész}"):
                 kivalasztott.append({"testrész": testrész, "ar": ar})
+                
+        st.markdown("&nbsp;", unsafe_allow_html=True)
 
     if not kivalasztott:
         st.warning("Válassz legalább egy területet a számításhoz.")
