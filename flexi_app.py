@@ -177,7 +177,7 @@ div[data-testid="stNumberInputContainer"] {
 
 
 # --- nézetválasztó ---
-mode = st.radio("Válassz nézetet:", ["💰 Kalkulátor mód", "📊 Bérletbe mi fér bele?"])
+mode = st.radio("Válassz nézetet:", ["💰 Melyik a legjobb bérlet?", "📊 Mi fér a bérletbe?"])
 
 # nem kiválasztása
 nem = st.radio("Páciens neme:", ["Nő", "Férfi"])
@@ -185,7 +185,7 @@ nem = st.radio("Páciens neme:", ["Nő", "Férfi"])
 st.markdown("&nbsp;", unsafe_allow_html=True)
 
 # ========== ÚJ NÉZET: "Bérletbe mi fér bele?" ==========
-if mode == "📊 Bérletbe mi fér bele?":
+if mode == "📊 Mi fér a bérletbe?":
     st.markdown("""
     Válaszd ki, mely területeket szeretnéd szőrteleníteni, és nézd meg, hány alkalom fér bele az egyes Flexi bérletekbe.
     """)
@@ -205,8 +205,15 @@ if mode == "📊 Bérletbe mi fér bele?":
     teruletek = [t["testrész"] for t in kivalasztott]
     arak = [t["ar"] for t in kivalasztott]
 
-    eredmeny_lista = []
+    # --- lista a méretkategóriák legolcsóbb árairól (a javaslathoz) ---
+    meret_arak = []
+    for meret, teruletek in ARLISTA[nem].items():
+        legkisebb = min(teruletek.values())
+        meret_arak.append({"meret": meret.split("–")[0].strip(), "ar": legkisebb})
+    meret_arak = sorted(meret_arak, key=lambda x: x["ar"])
 
+    # --- számítás ---
+    eredmeny_lista = []
     for b in BERLETEK:
         ertek = b["ertek"]
         n = len(arak)
@@ -214,9 +221,9 @@ if mode == "📊 Bérletbe mi fér bele?":
         maradek = ertek - (min_alkalom * sum(arak))
         alkalmak = [min_alkalom] * n
 
-        # osztjuk a maradékot arányosan, hogy kiegyenlített legyen
+        # maradék arányos elosztása
         while maradek >= min(arak):
-            i = min(range(n), key=lambda j: alkalmak[j])  # mindig a legkevesebb alkalmú kap
+            i = min(range(n), key=lambda j: alkalmak[j])  # a legkevesebb alkalmat kapja először
             if maradek >= arak[i] and alkalmak[i] < 6:  # max. 6 alkalom / terület
                 alkalmak[i] += 1
                 maradek -= arak[i]
@@ -226,24 +233,45 @@ if mode == "📊 Bérletbe mi fér bele?":
         felhasznalt = sum(a * ar for a, ar in zip(alkalmak, arak))
         maradek_ertek = ertek - felhasznalt
 
-        # csak akkor jelenítse meg, ha a bérlet ára <= felhasznált érték (nem "túl kicsi" a kihasználtság)
+        # --- csak akkor jelenítse meg, ha kihasznált ---
         if b["ar"] <= felhasznalt:
+            # --- javaslat a maradék értékre ---
+            javaslat = None
+            for ma in meret_arak:
+                if maradek_ertek >= ma["ar"]:
+                    javaslat = f"Maradékból legalább 1 {ma['meret']} méretű területre elég."
+            if not javaslat:
+                javaslat = "A maradék nem fedez teljes kezelést."
+
             reszletezes = ", ".join([f"{t}: {a}x" for t, a in zip(teruletek, alkalmak)])
             eredmeny_lista.append({
-                " ": b["nev"],
-                "Bérlet ára": f"{b['ar']:,} Ft".replace(",", " "),
-                "Bérlet értéke": f"{ertek:,} Ft".replace(",", " "),
-                "Mi fér bele?": reszletezes,
-                "Maradék összeg": f"{maradek_ertek:,} Ft".replace(",", " ")
+                "nev": b["nev"],
+                "ar": f"{b['ar']:,} Ft".replace(",", " "),
+                "ertek": f"{ertek:,} Ft".replace(",", " "),
+                "reszletezes": reszletezes,
+                "maradek": f"{maradek_ertek:,} Ft".replace(",", " "),
+                "javaslat": javaslat
             })
 
     if not eredmeny_lista:
         st.warning("A kiválasztott területek egyik bérletbe sem férnek bele optimálisan.")
     else:
-        df = pd.DataFrame(eredmeny_lista)
-        df.index = [""] * len(df)
         st.divider()
-        st.table(df, border="horizontal")
+        st.markdown("### 💜 Eredmények")
+
+        for e in eredmeny_lista:
+            st.markdown("---")
+            col1, col2, col3 = st.columns([1, 1, 1])
+            with col1:
+                st.markdown(f"**{e['nev']}**")
+                st.caption(f"Bérlet ára: {e['ar']}")
+                st.caption(f"Bérlet értéke: {e['ertek']}")
+            with col2:
+                st.markdown(f"**Mi fér bele?**")
+                st.markdown(e["reszletezes"])
+            with col3:
+                st.markdown(f"**Maradék:** {e['maradek']}")
+                st.caption(e["javaslat"])
 
 # ========== RÉGI NÉZET: Kalkulátor mód ==========
 else:
