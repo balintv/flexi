@@ -256,7 +256,7 @@ if mode == "📊 Mi fér a bérletbe?":
             javaslat = None
             for ma in meret_arak:
                 if maradek_ertek >= ma["ar"]:
-                    javaslat = f"Ez további 1 alkalom {ma['meret']} méretű területre elég."
+                    javaslat = f"Ez még legalább 1 alkalom {ma['meret']} méretű területre elég."
             if not javaslat:
                 javaslat = ""
 
@@ -325,7 +325,7 @@ else:
         df_kosar = pd.DataFrame(
             [
                 {
-                    "Terület": k["testrész"],
+                    " ": k["testrész"],
                     "Alkalmak száma": k["alkalom"],
                     "Ár / alkalom (Ft)": f"{k['ar']:,}".replace(",", " "),
                     "Részösszeg (Ft)": f"{k['ar'] * k['alkalom']:,}".replace(",", " "),
