@@ -191,10 +191,10 @@ if mode == "📊 Mi fér a bérletbe?":
     """)
 
     kivalasztott = []
-    for meret, teruletek in ARLISTA[nem].items():
+    for meret, teruletek_dict in ARLISTA[nem].items():
         st.markdown(f"##### {meret}")
-        for testrész, ar in teruletek.items():
-            if st.checkbox(f"{testrész}".replace(",", " "), key=f"bérlet_{nem}_{testrész}"):
+        for testrész, ar in teruletek_dict.items():
+            if st.checkbox(f"{testrész}", key=f"bérlet_{nem}_{testrész}"):
                 kivalasztott.append({"testrész": testrész, "ar": ar})
         st.markdown("&nbsp;", unsafe_allow_html=True)
 
@@ -207,8 +207,8 @@ if mode == "📊 Mi fér a bérletbe?":
 
     # --- lista a méretkategóriák legolcsóbb árairól (a javaslathoz) ---
     meret_arak = []
-    for meret, teruletek in ARLISTA[nem].items():
-        legkisebb = min(teruletek.values())
+    for meret, kateg_teruletek in ARLISTA[nem].items():  # <--- névütközés javítva
+        legkisebb = min(kateg_teruletek.values())
         meret_arak.append({"meret": meret.split("–")[0].strip(), "ar": legkisebb})
     meret_arak = sorted(meret_arak, key=lambda x: x["ar"])
 
@@ -223,8 +223,8 @@ if mode == "📊 Mi fér a bérletbe?":
 
         # maradék arányos elosztása
         while maradek >= min(arak):
-            i = min(range(n), key=lambda j: alkalmak[j])  # a legkevesebb alkalmat kapja először
-            if maradek >= arak[i] and alkalmak[i] < 6:  # max. 6 alkalom / terület
+            i = min(range(n), key=lambda j: alkalmak[j])
+            if maradek >= arak[i] and alkalmak[i] < 6:
                 alkalmak[i] += 1
                 maradek -= arak[i]
             else:
@@ -233,9 +233,8 @@ if mode == "📊 Mi fér a bérletbe?":
         felhasznalt = sum(a * ar for a, ar in zip(alkalmak, arak))
         maradek_ertek = ertek - felhasznalt
 
-        # --- csak akkor jelenítse meg, ha kihasznált ---
         if b["ar"] <= felhasznalt:
-            # --- javaslat a maradék értékre ---
+            # javaslat a maradék értékre
             javaslat = None
             for ma in meret_arak:
                 if maradek_ertek >= ma["ar"]:
@@ -264,6 +263,7 @@ if mode == "📊 Mi fér a bérletbe?":
             col1, col2, col3 = st.columns([1, 1, 1])
             with col1:
                 st.markdown(f"**{e['nev']}: {e['ar']}**")
+                st.caption(f"Értéke: {e['ertek']}")
             with col2:
                 st.markdown(f"**Mi fér bele?**")
                 st.markdown(e["reszletezes"])
