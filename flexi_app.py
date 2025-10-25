@@ -133,9 +133,54 @@ def legjobb_flexi_ajanlat(lista_ar_alkalom: float, alkalmak: int):
     legjobb = df.sort_values("Flexi ára").iloc[0]
     return legjobb, df.sort_values("Flexi ára")
 
+# ========== Nyomtatáshoz ==========
+
+def general_pdf(paciens_nem, kivalasztott, eredmeny_lista):
+    buffer = io.BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4)
+    styles = getSampleStyleSheet()
+    story = []
+
+    story.append(Paragraph("<b>Bársony Flexi Bérlet ajánlás</b>", styles["Title"]))
+    story.append(Spacer(1, 12))
+    story.append(Paragraph(f"Dátum: {datetime.date.today().strftime('%Y.%m.%d.')}", styles["Normal"]))
+    story.append(Paragraph(f"Páciens neme: <b>{paciens_nem}</b>", styles["Normal"]))
+    story.append(Spacer(1, 12))
+
+    # --- kiválasztott kezelések ---
+    story.append(Paragraph("<b>Kiválasztott területek:</b>", styles["Heading3"]))
+    data = [["Terület", "Ár / alkalom (Ft)"]]
+    for k in kivalasztott:
+        data.append([k["testrész"], f"{k['ar']:,} Ft".replace(",", " ")])
+    table = Table(data, colWidths=[8*cm, 6*cm])
+    table.setStyle(TableStyle([
+        ("BACKGROUND", (0,0), (-1,0), colors.lightgrey),
+        ("GRID", (0,0), (-1,-1), 0.25, colors.grey),
+        ("ALIGN", (1,1), (-1,-1), "RIGHT")
+    ]))
+    story.append(table)
+    story.append(Spacer(1, 20))
+
+    # --- javasolt bérletek ---
+    story.append(Paragraph("<b>Javasolt bérlet(ek):</b>", styles["Heading3"]))
+    for e in eredmeny_lista:
+        story.append(Spacer(1, 10))
+        story.append(Paragraph(f"<b>{e['nev']}</b> – {e['ar']} (értéke: {e['ertek']})", styles["Normal"]))
+        story.append(Paragraph(f"<i>Mi fér bele:</i>", styles["Normal"]))
+        story.append(Paragraph(e["reszletezes"].replace("<br>", "<br/>"), styles["Normal"]))
+        story.append(Paragraph(f"Maradék összeg: {e['maradek']}", styles["Normal"]))
+        if e["javaslat"]:
+            story.append(Paragraph(f"<font color='grey'>{e['javaslat']}</font>", styles["Normal"]))
+        story.append(Spacer(1, 6))
+
+    story.append(Spacer(1, 12))
+    story.append(Paragraph("Köszönjük, hogy a Bársonyt választotta!", styles["Italic"]))
+
+    doc.build(story)
+    buffer.seek(0)
+    return buffer
+
 # ========== Streamlit UI ==========
-
-
 
 st.set_page_config(page_title="Flexi bérlet ajánló", layout="centered", page_icon="👛")
 
@@ -289,6 +334,16 @@ if mode == "📊 Mi fér a bérletbe?":
             with col3:
                 st.markdown(f"**Maradék összeg:** {e['maradek']}")
                 st.caption(e["javaslat"])
+
+    # --- PDF generálása és letöltési gomb ---
+    if st.button("📄 PDF letöltése"):
+        pdf_buffer = general_pdf(nem, kivalasztott, eredmeny_lista)
+        st.download_button(
+            label="💾 PDF letöltése",
+            data=pdf_buffer,
+            file_name=f"barsony_flexi_ajanlas_{datetime.date.today()}.pdf",
+            mime="application/pdf"
+        )
 
 # ========== "Melyik a legjobb bérlet?" ==========
 else:
