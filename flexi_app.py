@@ -149,7 +149,7 @@ def general_pdf(paciens_nem, kivalasztott, eredmeny_lista):
     styles = getSampleStyleSheet()
     story = []
 
-    story.append(Paragraph("<b>Bársony Flexi Bérlet ajánlás</b>", styles["Title"]))
+    story.append(Paragraph("<b>Bársony Flexi Bérlet ajánlat</b>", styles["Title"]))
     story.append(Spacer(1, 12))
     story.append(Paragraph(f"Dátum: {datetime.date.today().strftime('%Y.%m.%d.')}", styles["Normal"]))
     story.append(Paragraph(f"Páciens neme: <b>{paciens_nem}</b>", styles["Normal"]))
@@ -344,12 +344,13 @@ if mode == "📊 Mi fér a bérletbe?":
                 st.caption(e["javaslat"])
 
     # --- PDF generálása és letöltési gomb ---
-    if st.button("📄 PDF letöltése"):
+    st.markdown("---")
+    if st.button("📄 PDF generálása nyomtatáshoz"):
         pdf_buffer = general_pdf(nem, kivalasztott, eredmeny_lista)
         st.download_button(
             label="💾 PDF letöltése",
             data=pdf_buffer,
-            file_name=f"barsony_flexi_ajanlas_{datetime.date.today()}.pdf",
+            file_name=f"barsony_flexi_ajanlat_{datetime.date.today()}.pdf",
             mime="application/pdf"
         )
 
