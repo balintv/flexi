@@ -196,7 +196,6 @@ if mode == "📊 Bérletbe mi fér bele?":
         for testrész, ar in teruletek.items():
             if st.checkbox(f"{testrész}".replace(",", " "), key=f"bérlet_{nem}_{testrész}"):
                 kivalasztott.append({"testrész": testrész, "ar": ar})
-
         st.markdown("&nbsp;", unsafe_allow_html=True)
 
     if not kivalasztott:
@@ -217,9 +216,8 @@ if mode == "📊 Bérletbe mi fér bele?":
 
         # osztjuk a maradékot arányosan, hogy kiegyenlített legyen
         while maradek >= min(arak):
-            # kiválasztjuk, melyik területre jusson a következő plusz alkalom
             i = min(range(n), key=lambda j: alkalmak[j])  # mindig a legkevesebb alkalmú kap
-            if maradek >= arak[i]:
+            if maradek >= arak[i] and alkalmak[i] < 6:  # max. 6 alkalom / terület
                 alkalmak[i] += 1
                 maradek -= arak[i]
             else:
@@ -228,21 +226,24 @@ if mode == "📊 Bérletbe mi fér bele?":
         felhasznalt = sum(a * ar for a, ar in zip(alkalmak, arak))
         maradek_ertek = ertek - felhasznalt
 
-        reszletezes = ", ".join([f"{t}: {a}x" for t, a in zip(teruletek, alkalmak)])
-        eredmeny_lista.append({
-            "Bérlet": b["nev"],
-            "Bérlet értéke": f"{ertek:,} Ft".replace(",", " "),
-            "Felhasznált érték": f"{felhasznalt:,} Ft".replace(",", " "),
-            "Maradék összeg": f"{maradek_ertek:,} Ft".replace(",", " "),
-            "Mi fér bele?": reszletezes
-        })
+        # csak akkor jelenítse meg, ha a bérlet ára <= felhasznált érték (nem "túl kicsi" a kihasználtság)
+        if b["ar"] <= felhasznalt:
+            reszletezes = ", ".join([f"{t}: {a}x" for t, a in zip(teruletek, alkalmak)])
+            eredmeny_lista.append({
+                "Bérlet": b["nev"],
+                "Mi fér bele?": reszletezes,
+                "Bérlet ára": f"{b['ar']:,} Ft".replace(",", " "),
+                "Bérlet értéke": f"{ertek:,} Ft".replace(",", " "),
+                "Maradék összeg": f"{maradek_ertek:,} Ft".replace(",", " ")
+            })
 
-    df = pd.DataFrame(eredmeny_lista)
-    df.index = [""] * len(df)
-
-    st.divider()
-
-    st.table(df)
+    if not eredmeny_lista:
+        st.warning("A kiválasztott területek egyik bérletbe sem férnek bele optimálisan.")
+    else:
+        df = pd.DataFrame(eredmeny_lista)
+        df.index = [""] * len(df)
+        st.divider()
+        st.table(df)
 
 # ========== RÉGI NÉZET: Kalkulátor mód ==========
 else:
