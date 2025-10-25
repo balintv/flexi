@@ -251,7 +251,7 @@ if mode == "📊 Mi fér a bérletbe?":
             javaslat = None
             for ma in meret_arak:
                 if maradek_ertek >= ma["ar"]:
-                    javaslat = f"A maradék legalább további 1 alkalom {ma['meret']} méretű területre elég."
+                    javaslat = f"Ez további 1 alkalom {ma['meret']} méretű területre elég."
             if not javaslat:
                 javaslat = ""
 
@@ -268,19 +268,16 @@ if mode == "📊 Mi fér a bérletbe?":
     if not eredmeny_lista:
         st.warning("A kiválasztott területek egyik bérletbe sem férnek bele optimálisan.")
     else:
-        st.divider()
-        st.markdown("### 💜 Eredmények")
-
         for e in eredmeny_lista:
             st.markdown("---")
             col1, col2, col3 = st.columns([1, 1, 1])
             with col1:
-                st.markdown(f"**{e['nev']}: {e['ar']}**")
+                st.markdown(f"💜 **{e['nev']} bérlet** {e['ar']}-ért")
             with col2:
                 st.markdown(f"**Mi fér bele?**")
                 st.markdown(e["reszletezes"], unsafe_allow_html=True)
             with col3:
-                st.markdown(f"**Maradék:** {e['maradek']}")
+                st.markdown(f"**Maradék összeg:** {e['maradek']}")
                 st.caption(e["javaslat"])
 
 # ========== "Melyik a legjobb bérlet?" ==========
