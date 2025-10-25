@@ -135,6 +135,8 @@ def legjobb_flexi_ajanlat(lista_ar_alkalom: float, alkalmak: int):
 
 # ========== Streamlit UI ==========
 
+
+
 st.set_page_config(page_title="Flexi bérlet ajánló", layout="centered", page_icon="👛")
 
 st.markdown("""
@@ -173,194 +175,258 @@ div[data-testid="stNumberInputContainer"] {
 </style>
 """, unsafe_allow_html=True)
 
+
+# --- nézetválasztó ---
+mode = st.radio("Válassz nézetet:", ["💰 Kalkulátor mód", "📊 Bérletbe mi fér bele?"])
+
 # nem kiválasztása
 nem = st.radio("Páciens neme:", ["Nő", "Férfi"])
 
 st.markdown("&nbsp;", unsafe_allow_html=True)
 
-kivalasztott = []
-for meret, teruletek in ARLISTA[nem].items():
-    st.markdown(f"##### {meret}")
+# ========== ÚJ NÉZET: "Bérletbe mi fér bele?" ==========
+if mode == "📊 Bérletbe mi fér bele?":
+    st.markdown("""
+    Válaszd ki, mely területeket szeretnéd szőrteleníteni, és nézd meg, hány alkalom fér bele az egyes Flexi bérletekbe.
+    """)
 
-    for testrész, ar in teruletek.items():
-        # egy sorba tesszük, vizuális kapcsolattal
-        st.markdown("<div class='checkbox-row'>", unsafe_allow_html=True)
-        col1, col2 = st.columns([3, 1])
-        with col1:
-            jelol = st.checkbox(f"{testrész}", key=f"{nem}_{testrész}")
-        with col2:
-            if jelol:
-                alkalom = st.number_input(
-                    "Alkalmak",
-                    min_value=1, max_value=10, step=1, value=1,
-                    key=f"{nem}_{testrész}_alkalom",
-                    label_visibility="hidden"
-                )
-                kivalasztott.append({"testrész": testrész, "alkalom": alkalom, "ar": ar})
-        st.markdown("</div>", unsafe_allow_html=True)
+    kivalasztott = []
+    for meret, teruletek in ARLISTA[nem].items():
+        st.markdown(f"##### {meret}")
+        for testrész, ar in teruletek.items():
+            if st.checkbox(f"{testrész} ({ar:,} Ft / alkalom)".replace(",", " "), key=f"bérlet_{nem}_{testrész}"):
+                kivalasztott.append({"testrész": testrész, "ar": ar})
 
-    st.markdown("&nbsp;", unsafe_allow_html=True)
+    if not kivalasztott:
+        st.warning("Válassz legalább egy területet a számításhoz.")
+        st.stop()
 
-st.divider()
+    teruletek = [t["testrész"] for t in kivalasztott]
+    arak = [t["ar"] for t in kivalasztott]
 
-# Eredmény
-osszes_ar = sum(k["ar"] * k["alkalom"] for k in kivalasztott)
+    eredmeny_lista = []
 
-if kivalasztott:
-    st.markdown("#### 🧾 Összesítő")
-    df_kosar = pd.DataFrame(
-        [
-            {
-                "Terület": k["testrész"],
-                "Alkalmak száma": k["alkalom"],
-                "Ár / alkalom (Ft)": f"{k['ar']:,}".replace(",", " "),
-                "Részösszeg (Ft)": f"{k['ar'] * k['alkalom']:,}".replace(",", " "),
-            }
-            for k in kivalasztott
-        ]
-    )
+    for b in BERLETEK:
+        ertek = b["ertek"]
+        n = len(arak)
+        min_alkalom = int(ertek // sum(arak))
+        maradek = ertek - (min_alkalom * sum(arak))
+        alkalmak = [min_alkalom] * n
 
-    df_kosar.index = [""] * len(df_kosar)
-    st.table(df_kosar, border="horizontal")
-
-    st.info(f"**Teljes csomag listaáron:** {osszes_ar:,} Ft".replace(",", " "))
-
-    legjobb, minden = legjobb_flexi_ajanlat(osszes_ar, 1)
-
-    kombinacio_szoveg = legjobb["Kombináció"].replace("Flexi", "").replace(" + ", "+").strip()
-    kombi = f"Flexi{kombinacio_szoveg}"
-    flexi_ar_int = int(legjobb["Flexi ára"])
-    lista_ar_int = int(legjobb["Listaáron fizetne"])
-    maradek = int(legjobb["Maradék érték (Ft)"])
-
-    flexi_ar = f"{flexi_ar_int:,} Ft".replace(",", " ")
-    lista_ar = f"{lista_ar_int:,} Ft".replace(",", " ")
-
-    # árlogika (HTML-kompatibilis formázásokkal)
-    if flexi_ar_int < lista_ar_int:
-        ar_sor = f"<s>{lista_ar}</s> → <b>{flexi_ar}</b>"
-        ajandek_sor = f"+ {maradek:,} Ft levásárolható érték".replace(",", " ") if maradek > 0 else ""
-    elif flexi_ar_int == lista_ar_int:
-        ar_sor = f"<b>{flexi_ar}</b>"
-        ajandek_sor = f"+ {maradek:,} Ft levásárolható érték".replace(",", " ") if maradek > 0 else ""
-    else:
-        plusz_fizet = flexi_ar_int - lista_ar_int
-        osszes_tobblet = maradek - plusz_fizet
-        plusz_fizet_szoveg = f"{plusz_fizet:,} Ft".replace(",", " ")
-        maradek_szoveg = f"{maradek:,} Ft".replace(",", " ")
-        osszes_tobblet_szoveg = f"{osszes_tobblet:,}".replace(",", " ")
-        ar_sor = (
-            f"+{plusz_fizet_szoveg} ráfordítással +{maradek_szoveg} értéket kap, "
-            f"így {osszes_tobblet_szoveg} forintot spórol a következő kezelésein!"
-        )
-        ajandek_sor = ""
-
-    # majd jön a HTML-doboz, ahogy eddig:
-    cim_html = (
-        f"<h3 style='color:#8C00D2; margin-bottom:6px;'>💜 {kombi} bérlet {flexi_ar}-ért</h3>"
-        if flexi_ar_int > lista_ar_int
-        else f"<h3 style='color:#8C00D2; margin-bottom:6px;'>💜 {kombi} bérlettel</h3>"
-    )
-
-    st.markdown(
-        f"""
-        <div style="
-            background-color:#f8f4fc;
-            border:1px solid #e8d9f9;
-            border-radius:12px;
-            padding:20px 25px;
-            margin:25px 0;
-        ">
-            {cim_html}
-            <p style='font-size:18px; margin:0 0 6px 0;'>{ar_sor}</p>
-            {f"<p style='font-size:16px; color:#333; margin:0 0 6px 0;'>{ajandek_sor}</p>" if ajandek_sor else ""}
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    # <<< KÖZELI BÉRLET AJÁNLÁS >>>
-    # Csak akkor ajánljon, ha a legjobb bérlet ára alacsonyabb, mint a listaár
-    if int(legjobb["Flexi ára"]) < int(legjobb["Listaáron fizetne"]):
-        KOZELI_KUSZOB = 45000  # Ft – paraméterezhető küszöb
-        aktualis_ar = int(legjobb["Flexi ára"])
-        aktualis_ertek = int(legjobb["Flexi értéke"])
-
-        # az összes bérletet ár szerint rendezzük
-        sorted_berletek = sorted(BERLETEK, key=lambda b: b["ar"])
-
-        # megkeressük, van-e a mostanihoz közel árban nagyobb flexi
-        for b in sorted_berletek:
-            if b["ar"] > aktualis_ar and (b["ar"] - aktualis_ar) <= KOZELI_KUSZOB:
-                ar_kulonbseg = b["ar"] - aktualis_ar
-                extra_ertek = b["ertek"] - aktualis_ertek
-                ar_kulonbseg_szoveg = f"{ar_kulonbseg:,}".replace(",", " ")
-                extra_ertek_szoveg = f"{extra_ertek:,}".replace(",", " ")
-
-                st.markdown(
-                    f"""
-                    <div style='background-color:#f7f3fc; border-radius:10px; padding:12px; margin-top:0px; margin-bottom:30px;'>
-                    💡 <b>Tipp:</b> ha <b>+{ar_kulonbseg_szoveg} Ft</b>-ot fizet,
-                    <b>+{extra_ertek_szoveg} Ft</b> értékkel több kezelést kaphat a
-                    <b>{b['nev']}</b> bérlettel.
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
+        # osztjuk a maradékot arányosan, hogy kiegyenlített legyen
+        while maradek >= min(arak):
+            # kiválasztjuk, melyik területre jusson a következő plusz alkalom
+            i = min(range(n), key=lambda j: alkalmak[j])  # mindig a legkevesebb alkalmú kap
+            if maradek >= arak[i]:
+                alkalmak[i] += 1
+                maradek -= arak[i]
+            else:
                 break
 
-    col1, col2, col3 = st.columns(3)
+        felhasznalt = sum(a * ar for a, ar in zip(alkalmak, arak))
+        maradek_ertek = ertek - felhasznalt
 
-    with col1:
-        st.metric(
-            label="Listaáron fizetne",
-            value=f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " ")
-        )
+        reszletezes = ", ".join([f"{t}: {a}x" for t, a in zip(teruletek, alkalmak)])
+        eredmeny_lista.append({
+            "Bérlet": b["nev"],
+            "Felhasználható érték (Ft)": f"{ertek:,}".replace(",", " "),
+            "Felhasznált érték (Ft)": f"{felhasznalt:,}".replace(",", " "),
+            "Maradék (Ft)": f"{maradek_ertek:,}".replace(",", " "),
+            "Kihasználtság (%)": f"{felhasznalt / ertek * 100:.1f}%",
+            "Részletezés": reszletezes
+        })
 
-    with col2:
-        flexi_ar = int(legjobb["Flexi ára"])
-        megtakaritas = (int(legjobb["Megtakarítás (Ft)"])) * -1
-        st.metric(
-            label="💰 Ajánlat ára",
-            value=f"{flexi_ar:,} Ft".replace(",", " "),
-            delta=f"{megtakaritas:,} Ft".replace(",", " "),
-            delta_color="normal"
-        )
+    df = pd.DataFrame(eredmeny_lista)
+    df.index = [""] * len(df)
+    st.table(df)
 
-    with col3:
-        flexi_ertek = int(legjobb["Flexi értéke"])
-        maradek = int(legjobb["Maradék érték (Ft)"])
-        st.metric(
-            label="💼 Ajánlat teljes értéke",
-            value=f"{flexi_ertek:,} Ft".replace(",", " "),
-            delta=f"{maradek:,} Ft marad a bérletén".replace(",", " "),
-            delta_color="normal"
-        )
-
-
+# ========== RÉGI NÉZET: Kalkulátor mód ==========
 else:
-    st.warning("Válassz legalább egy kezelést a számításhoz!")
+    kivalasztott = []
+    for meret, teruletek in ARLISTA[nem].items():
+        st.markdown(f"##### {meret}")
 
-# st.divider()
+        for testrész, ar in teruletek.items():
+            # egy sorba tesszük, vizuális kapcsolattal
+            st.markdown("<div class='checkbox-row'>", unsafe_allow_html=True)
+            col1, col2 = st.columns([3, 1])
+            with col1:
+                jelol = st.checkbox(f"{testrész}", key=f"{nem}_{testrész}")
+            with col2:
+                if jelol:
+                    alkalom = st.number_input(
+                        "Alkalmak",
+                        min_value=1, max_value=10, step=1, value=1,
+                        key=f"{nem}_{testrész}_alkalom",
+                        label_visibility="hidden"
+                    )
+                    kivalasztott.append({"testrész": testrész, "alkalom": alkalom, "ar": ar})
+            st.markdown("</div>", unsafe_allow_html=True)
 
-# # bérletek táblázata
-# df_berletek = pd.DataFrame(BERLETEK)
+        st.markdown("&nbsp;", unsafe_allow_html=True)
 
-# # oszlopok átnevezése és formázása
-# df_berletek = df_berletek.rename(columns={
-#     "nev": "Bérlet típusa",
-#     "ar": "Bérlet ára (Ft)",
-#     "ertek": "Felhasználható érték (Ft)"
-# })
-# df_berletek["Megtakarítás (Ft)"] = df_berletek["Felhasználható érték (Ft)"] - df_berletek["Bérlet ára (Ft)"]
+    st.divider()
 
-# # magyar formátum (ezres elválasztó szóközzel)
-# df_berletek["Bérlet ára (Ft)"] = df_berletek["Bérlet ára (Ft)"].map(lambda x: f"{x:,}".replace(",", " "))
-# df_berletek["Felhasználható érték (Ft)"] = df_berletek["Felhasználható érték (Ft)"].map(lambda x: f"{x:,}".replace(",", " "))
-# df_berletek["Megtakarítás (Ft)"] = df_berletek["Megtakarítás (Ft)"].map(lambda x: f"{x:,}".replace(",", " "))
+    # Eredmény
+    osszes_ar = sum(k["ar"] * k["alkalom"] for k in kivalasztott)
 
-# # üres index
-# df_berletek.index = [""] * len(df_berletek)
+    if kivalasztott:
+        st.markdown("#### 🧾 Összesítő")
+        df_kosar = pd.DataFrame(
+            [
+                {
+                    "Terület": k["testrész"],
+                    "Alkalmak száma": k["alkalom"],
+                    "Ár / alkalom (Ft)": f"{k['ar']:,}".replace(",", " "),
+                    "Részösszeg (Ft)": f"{k['ar'] * k['alkalom']:,}".replace(",", " "),
+                }
+                for k in kivalasztott
+            ]
+        )
 
-# # táblázat megjelenítése
-# st.table(df_berletek, border="horizontal")
+        df_kosar.index = [""] * len(df_kosar)
+        st.table(df_kosar, border="horizontal")
+
+        st.info(f"**Teljes csomag listaáron:** {osszes_ar:,} Ft".replace(",", " "))
+
+        legjobb, minden = legjobb_flexi_ajanlat(osszes_ar, 1)
+
+        kombinacio_szoveg = legjobb["Kombináció"].replace("Flexi", "").replace(" + ", "+").strip()
+        kombi = f"Flexi{kombinacio_szoveg}"
+        flexi_ar_int = int(legjobb["Flexi ára"])
+        lista_ar_int = int(legjobb["Listaáron fizetne"])
+        maradek = int(legjobb["Maradék érték (Ft)"])
+
+        flexi_ar = f"{flexi_ar_int:,} Ft".replace(",", " ")
+        lista_ar = f"{lista_ar_int:,} Ft".replace(",", " ")
+
+        # árlogika (HTML-kompatibilis formázásokkal)
+        if flexi_ar_int < lista_ar_int:
+            ar_sor = f"<s>{lista_ar}</s> → <b>{flexi_ar}</b>"
+            ajandek_sor = f"+ {maradek:,} Ft levásárolható érték".replace(",", " ") if maradek > 0 else ""
+        elif flexi_ar_int == lista_ar_int:
+            ar_sor = f"<b>{flexi_ar}</b>"
+            ajandek_sor = f"+ {maradek:,} Ft levásárolható érték".replace(",", " ") if maradek > 0 else ""
+        else:
+            plusz_fizet = flexi_ar_int - lista_ar_int
+            osszes_tobblet = maradek - plusz_fizet
+            plusz_fizet_szoveg = f"{plusz_fizet:,} Ft".replace(",", " ")
+            maradek_szoveg = f"{maradek:,} Ft".replace(",", " ")
+            osszes_tobblet_szoveg = f"{osszes_tobblet:,}".replace(",", " ")
+            ar_sor = (
+                f"+{plusz_fizet_szoveg} ráfordítással +{maradek_szoveg} értéket kap, "
+                f"így {osszes_tobblet_szoveg} forintot spórol a következő kezelésein!"
+            )
+            ajandek_sor = ""
+
+        # majd jön a HTML-doboz, ahogy eddig:
+        cim_html = (
+            f"<h3 style='color:#8C00D2; margin-bottom:6px;'>💜 {kombi} bérlet {flexi_ar}-ért</h3>"
+            if flexi_ar_int > lista_ar_int
+            else f"<h3 style='color:#8C00D2; margin-bottom:6px;'>💜 {kombi} bérlettel</h3>"
+        )
+
+        st.markdown(
+            f"""
+            <div style="
+                background-color:#f8f4fc;
+                border:1px solid #e8d9f9;
+                border-radius:12px;
+                padding:20px 25px;
+                margin:25px 0;
+            ">
+                {cim_html}
+                <p style='font-size:18px; margin:0 0 6px 0;'>{ar_sor}</p>
+                {f"<p style='font-size:16px; color:#333; margin:0 0 6px 0;'>{ajandek_sor}</p>" if ajandek_sor else ""}
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        # <<< KÖZELI BÉRLET AJÁNLÁS >>>
+        # Csak akkor ajánljon, ha a legjobb bérlet ára alacsonyabb, mint a listaár
+        if int(legjobb["Flexi ára"]) < int(legjobb["Listaáron fizetne"]):
+            KOZELI_KUSZOB = 45000  # Ft – paraméterezhető küszöb
+            aktualis_ar = int(legjobb["Flexi ára"])
+            aktualis_ertek = int(legjobb["Flexi értéke"])
+
+            # az összes bérletet ár szerint rendezzük
+            sorted_berletek = sorted(BERLETEK, key=lambda b: b["ar"])
+
+            # megkeressük, van-e a mostanihoz közel árban nagyobb flexi
+            for b in sorted_berletek:
+                if b["ar"] > aktualis_ar and (b["ar"] - aktualis_ar) <= KOZELI_KUSZOB:
+                    ar_kulonbseg = b["ar"] - aktualis_ar
+                    extra_ertek = b["ertek"] - aktualis_ertek
+                    ar_kulonbseg_szoveg = f"{ar_kulonbseg:,}".replace(",", " ")
+                    extra_ertek_szoveg = f"{extra_ertek:,}".replace(",", " ")
+
+                    st.markdown(
+                        f"""
+                        <div style='background-color:#f7f3fc; border-radius:10px; padding:12px; margin-top:0px; margin-bottom:30px;'>
+                        💡 <b>Tipp:</b> ha <b>+{ar_kulonbseg_szoveg} Ft</b>-ot fizet,
+                        <b>+{extra_ertek_szoveg} Ft</b> értékkel több kezelést kaphat a
+                        <b>{b['nev']}</b> bérlettel.
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+                    break
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.metric(
+                label="Listaáron fizetne",
+                value=f"{int(legjobb['Listaáron fizetne']):,} Ft".replace(",", " ")
+            )
+
+        with col2:
+            flexi_ar = int(legjobb["Flexi ára"])
+            megtakaritas = (int(legjobb["Megtakarítás (Ft)"])) * -1
+            st.metric(
+                label="💰 Ajánlat ára",
+                value=f"{flexi_ar:,} Ft".replace(",", " "),
+                delta=f"{megtakaritas:,} Ft".replace(",", " "),
+                delta_color="normal"
+            )
+
+        with col3:
+            flexi_ertek = int(legjobb["Flexi értéke"])
+            maradek = int(legjobb["Maradék érték (Ft)"])
+            st.metric(
+                label="💼 Ajánlat teljes értéke",
+                value=f"{flexi_ertek:,} Ft".replace(",", " "),
+                delta=f"{maradek:,} Ft marad a bérletén".replace(",", " "),
+                delta_color="normal"
+            )
+
+
+    else:
+        st.warning("Válassz legalább egy kezelést a számításhoz!")
+
+    # st.divider()
+
+    # # bérletek táblázata
+    # df_berletek = pd.DataFrame(BERLETEK)
+
+    # # oszlopok átnevezése és formázása
+    # df_berletek = df_berletek.rename(columns={
+    #     "nev": "Bérlet típusa",
+    #     "ar": "Bérlet ára (Ft)",
+    #     "ertek": "Felhasználható érték (Ft)"
+    # })
+    # df_berletek["Megtakarítás (Ft)"] = df_berletek["Felhasználható érték (Ft)"] - df_berletek["Bérlet ára (Ft)"]
+
+    # # magyar formátum (ezres elválasztó szóközzel)
+    # df_berletek["Bérlet ára (Ft)"] = df_berletek["Bérlet ára (Ft)"].map(lambda x: f"{x:,}".replace(",", " "))
+    # df_berletek["Felhasználható érték (Ft)"] = df_berletek["Felhasználható érték (Ft)"].map(lambda x: f"{x:,}".replace(",", " "))
+    # df_berletek["Megtakarítás (Ft)"] = df_berletek["Megtakarítás (Ft)"].map(lambda x: f"{x:,}".replace(",", " "))
+
+    # # üres index
+    # df_berletek.index = [""] * len(df_berletek)
+
+    # # táblázat megjelenítése
+    # st.table(df_berletek, border="horizontal")
+
+    pass
