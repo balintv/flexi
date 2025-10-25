@@ -194,7 +194,7 @@ if mode == "📊 Bérletbe mi fér bele?":
     for meret, teruletek in ARLISTA[nem].items():
         st.markdown(f"##### {meret}")
         for testrész, ar in teruletek.items():
-            if st.checkbox(f"{testrész} ({ar:,} Ft / alkalom)".replace(",", " "), key=f"bérlet_{nem}_{testrész}"):
+            if st.checkbox(f"{testrész}".replace(",", " "), key=f"bérlet_{nem}_{testrész}"):
                 kivalasztott.append({"testrész": testrész, "ar": ar})
 
     if not kivalasztott:
@@ -238,6 +238,9 @@ if mode == "📊 Bérletbe mi fér bele?":
 
     df = pd.DataFrame(eredmeny_lista)
     df.index = [""] * len(df)
+
+    st.markdown("&nbsp;", unsafe_allow_html=True)
+
     st.table(df)
 
 # ========== RÉGI NÉZET: Kalkulátor mód ==========
