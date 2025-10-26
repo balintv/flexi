@@ -306,9 +306,9 @@ if mode == "📊 Mi fér a bérletbe?":
         felhasznalt = sum(a * ar for a, ar in zip(alkalmak, arak))
         maradek_ertek = ertek - felhasznalt
 
-        # túl nagy maradék kizárása (legalább egy XL-nél több)
-        if maradek_ertek > xl_ar:
-            continue
+        # # túl nagy maradék kizárása (legalább egy XL-nél több)
+        # if maradek_ertek > xl_ar:
+        #     continue
 
         # hány testrészre jött ki 0 alkalom
         nulla_db = sum(1 for a in alkalmak if a == 0)
