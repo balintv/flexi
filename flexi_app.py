@@ -343,7 +343,7 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
 
   <script>
   // Automatikusan méretezi az iframe-et a tartalomhoz
-  window.parent.postMessage({ streamlitResize: document.body.scrollHeight }, "*");
+  window.parent.postMessage({{ streamlitResize: document.body.scrollHeight }}, "*");
   </script>
 
 </body>
