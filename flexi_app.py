@@ -742,7 +742,7 @@ else:
                     "ertek": f"{lista_ar_int:,} Ft".replace(",", " "),
                     "reszletezes": f"<b>{legjobb_olcsobb['nev']}</b> + <b>{kulonbozet:,} Ft</b></b><br><b>Megtakarítás:</b> {(lista_ar_int - uj_ar):,} Ft".replace(",", " "),
                     "maradek": " ",
-                    "javaslat": f"A Flexi bérlet {legjobb_olcsobb['nev']} + különbözet opcióval olcsóbb, mint a listaár.",
+                    "javaslat": f"A Flexi + különbözet opcióval olcsóbb, mint a listaár.",
                 }]
         else:
             # eredeti ajánlati logika marad
