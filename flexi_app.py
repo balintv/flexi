@@ -711,7 +711,11 @@ else:
 
         if flexi_ar_int > lista_ar_int:
             # van-e olcsóbb bérlet, ami mégis fedezné az értéket
-            kisebb_berletek = [b for b in BERLETEK if b["ertek"] >= lista_ar_int and b["ar"] < flexi_ar_int]
+            for b in BERLETEK:
+                # mennyibe kerülne, ha ezt a bérletet vennénk + különbözetet fizetnénk
+                teljes_ar = b["ar"] + max(0, lista_ar_int - b["ertek"])
+                if teljes_ar < flexi_ar_int:
+                    kisebb_berletek.append({**b, "uj_ar": teljes_ar})
 
             if not kisebb_berletek:
                 # nincs jobb flexi ajánlat
@@ -724,21 +728,20 @@ else:
                     "javaslat": "Ebben az esetben a listaár kedvezőbb.",
                 }]
             else:
-                # találunk olcsóbb bérletet, ami fedezi
-                legjobb_olcsobb = kisebb_berletek[-1]  # a legnagyobb ilyen
+                # a legjobb (tehát legmagasabb értékű, de még mindig olcsóbb)
+                legjobb_olcsobb = max(kisebb_berletek, key=lambda b: b["ertek"])
                 kulonbozet = lista_ar_int - legjobb_olcsobb["ertek"]
                 if kulonbozet < 0:
                     kulonbozet = 0
-
                 uj_ar = legjobb_olcsobb["ar"] + kulonbozet
 
                 eredmeny_lista = [{
                     "nev": legjobb_olcsobb["nev"],
                     "ar": f"{uj_ar:,} Ft".replace(",", " "),
                     "ertek": f"{legjobb_olcsobb['ertek']:,} Ft".replace(",", " "),
-                    "reszletezes": f"<b>{legjobb_olcsobb['nev']}</b> bérlet igénybevételével, és a különbözet kifizetésével az ár: <b>{uj_ar:,} Ft</b>.",
+                    "reszletezes": f"<b>{legjobb_olcsobb['nev']}</b> bérlet + <b>{kulonbozet:,} Ft</b> különbözet = <b>{uj_ar:,} Ft</b>.",
                     "maradek": f"{(legjobb_olcsobb['ertek'] - lista_ar_int):,} Ft".replace(",", " "),
-                    "javaslat": "Ez a megoldás kisebb Flexi bérlettel is lehetséges.",
+                    "javaslat": f"A Flexi bérlet {legjobb_olcsobb['nev']} + különbözet opcióval olcsóbb, mint a listaár.",
                 }]
         else:
             # eredeti ajánlati logika marad
