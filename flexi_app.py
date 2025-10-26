@@ -158,7 +158,7 @@ def build_print_html(paciens_nem: str, paciens_nev: str, kivalasztott: list, ere
           <div class="card__row">
             <div class="card__col">
               <div class="card__title">💜 {e['nev']}</div>
-              <div class="card__price"><s>{e['ertek']}</s> → <b>{e['ar']}</b></div>
+              <div class="card__price"><s>{e['felhasznalt']}</s> → <b>{e['ar']}</b></div>
             </div>
             <div class="card__col">
               <div class="card__label">Mi fér a bérletbe?</div>
@@ -487,7 +487,8 @@ if mode == "📊 Mi fér a bérletbe?":
                 "ertek": f"{ertek:,} Ft".replace(",", " "),
                 "reszletezes": reszletezes,
                 "maradek": f"{maradek_ertek:,} Ft".replace(",", " "),
-                "javaslat": javaslat
+                "javaslat": javaslat,
+                "felhasznalt": felhasznalt
             })
 
     if not eredmeny_lista:
