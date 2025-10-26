@@ -709,14 +709,49 @@ else:
         maradek = int(legjobb["Maradék érték (Ft)"])
         megtakaritas = (int(legjobb["Megtakarítás (Ft)"])) * -1
 
-        html = build_print_html_b_mode(nem, paciens_nev, kivalasztott, [{
-            "nev": kombi,
-            "ar": f"{flexi_ar_int:,} Ft".replace(",", " "),
-            "ertek": f"{lista_ar_int:,} Ft".replace(",", " "),
-            "reszletezes": f"<b>Listaár:</b> {lista_ar} <br><b>Flexi ár:</b> {flexi_ar} <br><b>Megtakarítás:</b> {megtakaritas:,} Ft".replace(",", " "),
-            "maradek": f"{maradek:,} Ft".replace(",", " "),
-            "javaslat": "Ennyit spórol a következő kezeléseinél."
-        }])
+        if flexi_ar_int > lista_ar_int:
+            # van-e olcsóbb bérlet, ami mégis fedezné az értéket
+            kisebb_berletek = [b for b in BERLETEK if b["ertek"] >= lista_ar_int and b["ar"] < flexi_ar_int]
+
+            if not kisebb_berletek:
+                # nincs jobb flexi ajánlat
+                eredmeny_lista = [{
+                    "nev": "–",
+                    "ar": f"{lista_ar_int:,} Ft".replace(",", " "),
+                    "ertek": f"{lista_ar_int:,} Ft".replace(",", " "),
+                    "reszletezes": "<b>Nincs jobb Flexi ajánlat, mint a listaár.</b>",
+                    "maradek": "0 Ft",
+                    "javaslat": "Ebben az esetben a listaár kedvezőbb.",
+                }]
+            else:
+                # találunk olcsóbb bérletet, ami fedezi
+                legjobb_olcsobb = kisebb_berletek[-1]  # a legnagyobb ilyen
+                kulonbozet = lista_ar_int - legjobb_olcsobb["ertek"]
+                if kulonbozet < 0:
+                    kulonbozet = 0
+
+                uj_ar = legjobb_olcsobb["ar"] + kulonbozet
+
+                eredmeny_lista = [{
+                    "nev": legjobb_olcsobb["nev"],
+                    "ar": f"{uj_ar:,} Ft".replace(",", " "),
+                    "ertek": f"{legjobb_olcsobb['ertek']:,} Ft".replace(",", " "),
+                    "reszletezes": f"<b>{legjobb_olcsobb['nev']}</b> bérlet igénybevételével, és a különbözet kifizetésével az ár: <b>{uj_ar:,} Ft</b>.",
+                    "maradek": f"{(legjobb_olcsobb['ertek'] - lista_ar_int):,} Ft".replace(",", " "),
+                    "javaslat": "Ez a megoldás kisebb Flexi bérlettel is lehetséges.",
+                }]
+        else:
+            # eredeti ajánlati logika marad
+            eredmeny_lista = [{
+                "nev": kombi,
+                "ar": f"{flexi_ar_int:,} Ft".replace(",", " "),
+                "ertek": f"{lista_ar_int:,} Ft".replace(",", " "),
+                "reszletezes": f"<b>Listaáron fizetve:</b> {lista_ar} <br><b>Flexi bérlet ára:</b> {flexi_ar} <br><b>Megtakarítás:</b> {megtakaritas:,} Ft".replace(",", " "),
+                "maradek": f"{maradek:,} Ft".replace(",", " "),
+                "javaslat": f"Ennyit spórol a következő kezeléseinél."
+            }]
+
+        html = build_print_html_b_mode(nem, paciens_nev, kivalasztott, eredmeny_lista)
 
         import streamlit.components.v1 as components
         components.html(html, height=1200, scrolling=False)
