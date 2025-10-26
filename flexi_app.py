@@ -710,7 +710,8 @@ else:
         megtakaritas = (int(legjobb["Megtakarítás (Ft)"])) * -1
 
         if flexi_ar_int > lista_ar_int:
-            # van-e olcsóbb bérlet, ami mégis fedezné az értéket
+            # van-e olcsóbb bérlet, ami mégis fedezné az 
+            kisebb_berletek = []
             for b in BERLETEK:
                 # mennyibe kerülne, ha ezt a bérletet vennénk + különbözetet fizetnénk
                 teljes_ar = b["ar"] + max(0, lista_ar_int - b["ertek"])
