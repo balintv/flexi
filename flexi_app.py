@@ -351,6 +351,163 @@ def build_print_html(paciens_nem: str, paciens_nev: str, kivalasztott: list, ere
 </html>
 """
 
+def build_print_html_b_mode(paciens_nem: str, paciens_nev: str, kivalasztott: list, eredmeny_lista: list) -> str:
+    logo_url = "https://www.barsony.hu/wp-content/uploads/2025/10/barsony-logo-lila-nyomtatashoz.png"
+    today = datetime.date.today().strftime("%Y.%m.%d.")
+
+    # --- táblázat a kiválasztott kezelésekről (4 oszlop: terület, alkalmak, ár, részösszeg)
+    kiv_html = "".join(
+        f"<tr>"
+        f"<td>{k['testrész']}</td>"
+        f"<td class='right'>{k['alkalom']} alkalom</td>"
+        f"<td class='right'>{k['ar']:,} Ft</td>"
+        f"<td class='right'>{k['ar'] * k['alkalom']:,} Ft</td>"
+        f"</tr>".replace(",", " ")
+        for k in kivalasztott
+    )
+
+    # --- kártyák generálása (ugyanaz, mint az A módnál)
+    kartyak_html = ""
+    for e in reversed(eredmeny_lista):
+        kartyak_html += f"""
+        <div class="card">
+          <div class="card__row">
+            <div class="card__col">
+              <div class="card__title">💜 {e['nev']}</div>
+              <div class="card__price"><s>{e['ertek']}</s> → <b>{e['ar']}</b></div>
+            </div>
+            <div class="card__col">
+              <div class="card__label">Összegzés</div>
+              <div class="card__list">{e['reszletezes']}</div>
+            </div>
+            <div class="card__col">
+              <div class="card__label">Maradék összeg:</div>
+              <div class="card__value">{e['maradek']}</div>
+              <div class="card__hint">{e['javaslat'] or ""}</div>
+            </div>
+          </div>
+        </div>
+        """
+
+    # --- HTML template (ugyanaz a CSS)
+    return f"""
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<title>Bársony Flexi Bérlet ajánlat</title>
+<style>
+  :root {{
+    --lila: #701783;
+    --lila-light: #f8f4fc;
+    --szurke: #666;
+    --keret: #e8d9f9;
+  }}
+  * {{ box-sizing: border-box; }}
+  body {{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "DejaVu Sans", sans-serif;
+    color:#222; margin:0; background:#fff;
+  }}
+  .wrap {{ max-width: 900px; margin: 24px auto; padding: 0 16px; }}
+  header {{ display:flex; align-items:center; gap:16px; margin-bottom:16px; }}
+  header img {{ height:38px; }}
+  header .title {{ font-size:24px; font-weight:700; color:var(--lila); line-height:1.2; }}
+  .meta {{ color:#555; font-size:14px; margin: 4px 0 16px; }}
+
+  h2 {{ margin:20px 0 10px; font-size:18px; color:#333; }}
+  table.list {{ width:100%; border-collapse:collapse; font-size:14px; }}
+  table.list th, table.list td {{ padding:8px 10px; border:1px solid #ddd; }}
+  table.list th {{ background:#f2f2f2; text-align:left; }}
+  .right {{ text-align:right; }}
+
+.card {{
+  border: 1px solid var(--keret);
+  background: var(--lila-light);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-bottom: 22px;
+  page-break-inside: avoid;
+}}
+.card__row {{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: nowrap;
+}}
+.card__col {{ flex-grow: 1; }}
+.card__col:first-child {{ flex-basis: 32%; min-width: 180px; }}
+.card__col:nth-child(2) {{ flex-basis: 40%; min-width: 200px; }}
+.card__col:last-child {{ flex-basis: 28%; min-width: 160px; }}
+.card__title {{ font-size: 18px; font-weight: 700; color: var(--lila); margin-bottom: 4px; }}
+.card__price {{ font-size: 14px; margin-bottom: 12px; }}
+.card__price s {{ color: #999; margin-right: 4px; }}
+.card__price b {{ color: var(--lila); }}
+.card__label {{ font-weight: 600; margin-bottom: 4px; font-size: 14px; }}
+.card__list {{ line-height: 1.6; font-size: 14px; }}
+.card__value {{ font-size: 14px; font-weight: 600; }}
+.card__hint {{ color: #777; font-size: 12px; margin-top: 5px; }}
+@media (max-width: 600px) {{
+  .card__row {{ flex-direction: column; gap: 10px; }}
+  .card__col {{ flex-basis: 100% !important; }}
+}}
+.actions {{ margin: 16px 0; }}
+.btn-print {{
+  appearance:none; border:1px solid var(--keret); background:#fff;
+  padding:8px 12px; border-radius:8px; cursor:pointer; color:#333;
+}}
+.btn-print:hover {{ border-color: var(--lila); color: var(--lila); }}
+@media print {{
+  .no-print {{ display:none !important; }}
+  body {{ background:#fff; margin: 0; }}
+  header {{ margin-bottom: 8px; }}
+  @page {{ size: A4 portrait; margin: 12mm; }}
+  .wrap {{ max-width: 100%; margin:0; padding:0; }}
+}}
+</style>
+</head>
+<body>
+  <div class="wrap" id="print-area">
+    <header>
+      <img src="{logo_url}" alt="Bársony logó">
+      <div>
+        <div class="title">Flexi Bérlet ajánlat</div>
+        <div class="meta">Páciens neve: {paciens_nev} &nbsp;•&nbsp; Dátum: {today} &nbsp;•&nbsp; Neme: {paciens_nem}</div>
+      </div>
+    </header>
+
+    <h2>Kiválasztott kezelések</h2>
+    <table class="list">
+      <tr>
+        <th>Terület</th>
+        <th class="right">Alkalmak száma</th>
+        <th class="right">Ár / alkalom</th>
+        <th class="right">Részösszeg</th>
+      </tr>
+      {kiv_html}
+    </table>
+
+    <h2>Ajánlott Flexi bérlet</h2>
+    <div class="grid">
+      {kartyak_html}
+    </div>
+
+    <div class="actions no-print">
+      <button class="btn-print" onclick="window.print()">🖨️ Nyomtatás / Mentés PDF-be</button>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('load', () => {{
+      const h = document.body.scrollHeight;
+      window.parent.postMessage({{ type: 'streamlit:setFrameHeight', height: h + 50 }}, '*');
+    }});
+  </script>
+
+</body>
+</html>
+"""
+
 
 # ========== Streamlit UI ==========
 
@@ -687,6 +844,19 @@ else:
                 delta=f"{maradek:,} Ft marad a bérletén".replace(",", " "),
                 delta_color="normal"
             )
+
+
+        html = build_print_html_b_mode(nem, paciens_nev, kivalasztott, [{
+            "nev": kombi,
+            "ar": f"{flexi_ar_int:,} Ft".replace(",", " "),
+            "ertek": f"{lista_ar_int:,} Ft".replace(",", " "),
+            "reszletezes": f"<b>Listaáron fizetve:</b> {lista_ar} <br><b>Flexi bérlet ára:</b> {flexi_ar} <br><b>Megtakarítás:</b> {megtakaritas:,} Ft".replace(",", " "),
+            "maradek": f"{maradek:,} Ft".replace(",", " "),
+            "javaslat": "Ennyit spórol a következő kezeléseinél."
+        }])
+
+        import streamlit.components.v1 as components
+        components.html(html, height=1200, scrolling=False)
 
 
     else:
