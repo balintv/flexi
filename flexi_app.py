@@ -401,6 +401,11 @@ st.markdown("&nbsp;", unsafe_allow_html=True)
 # nem kiválasztása
 nem = st.radio("Páciens neme:", ["Nő", "Férfi"])
 
+# páciens neve
+paciens_nev = st.text_input("Páciens neve:")
+if not paciens_nev:
+    paciens_nev = "-"
+
 st.markdown("&nbsp;", unsafe_allow_html=True)
 
 # ========== "Mi fér a bérletbe? ==========
@@ -507,21 +512,16 @@ if mode == "📊 Mi fér a bérletbe?":
 
         st.markdown("---")
 
-        # páciens neve
-        paciens_nev = st.text_input("Páciens neve:")
-        if not paciens_nev:
-            paciens_nev = "-"
-
         import streamlit.components.v1 as components
 
         html = build_print_html(nem, paciens_nev, kivalasztott, eredmeny_lista)
-        #components.html(html, height=1200, scrolling=False)
+        components.html(html, height=1200, scrolling=False)
 
-        st.download_button(
-            "💾 Nyomtatható ajánlat (HTML)",
-            data=html.encode("utf-8"),
-            file_name=f"barsony_flexi_ajanlat_{datetime.date.today()}_{paciens_nev}.html",
-            mime="text/html")
+        # st.download_button(
+        #     "💾 Nyomtatható ajánlat (HTML)",
+        #     data=html.encode("utf-8"),
+        #     file_name=f"barsony_flexi_ajanlat_{datetime.date.today()}_{paciens_nev}.html",
+        #     mime="text/html")
 
 
 # ========== "Melyik a legjobb bérlet?" ==========
