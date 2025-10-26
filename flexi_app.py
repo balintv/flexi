@@ -478,7 +478,7 @@ if mode == "📊 Mi fér a bérletbe?":
                 if maradek_ertek >= ma["ar"]:
                     hanyszor = maradek_ertek // ma["ar"]
                     if hanyszor >= 1:
-                        javaslat = f"Ez még legalább {int(hanyszor)} alkalom {ma['meret']} méretű területre elég."
+                        javaslat = f"Még {int(hanyszor)} alkalom {ma['meret']} méretű területre elég."
             if not javaslat:
                 javaslat = ""
 
