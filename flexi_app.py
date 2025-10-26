@@ -488,7 +488,7 @@ if mode == "📊 Mi fér a bérletbe?":
                 "reszletezes": reszletezes,
                 "maradek": f"{maradek_ertek:,} Ft".replace(",", " "),
                 "javaslat": javaslat,
-                "felhasznalt": felhasznalt
+                "felhasznalt": f"{felhasznalt:,} Ft".replace(",", " ")
             })
 
     if not eredmeny_lista:
