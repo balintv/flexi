@@ -179,7 +179,7 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
 <html lang="hu">
 <head>
 <meta charset="utf-8">
-<title>Bársony Flexi Bérlet ajánlat</title>
+<title>Flexi Bérlet ajánlat</title>
 <style>
   :root {{
     --lila: #701783;
@@ -491,29 +491,29 @@ if mode == "📊 Mi fér a bérletbe?":
     if not eredmeny_lista:
         st.warning("A kiválasztott területek egyik bérletbe sem férnek bele optimálisan.")
     else:
-        for e in eredmeny_lista:
-            st.markdown("---")
-            col1, col2, col3 = st.columns([1, 1, 1])
-            with col1:
-                st.markdown(f"### 💜 **{e['nev']}**")
-                st.markdown(
-                    f"<span style='font-size:18px; color:#111;'>"
-                    f"<s>{e['ertek']}</s> → <b style='color:#8C00D2'>{e['ar']}</b>"
-                    f"</span>",
-                    unsafe_allow_html=True)
-            with col2:
-                st.markdown(f"**Mi fér bele?**")
-                st.markdown(e["reszletezes"], unsafe_allow_html=True)
-            with col3:
-                st.markdown(f"**Maradék összeg:** {e['maradek']}")
-                st.caption(e["javaslat"])
+        # for e in eredmeny_lista:
+        #     st.markdown("---")
+        #     col1, col2, col3 = st.columns([1, 1, 1])
+        #     with col1:
+        #         st.markdown(f"### 💜 **{e['nev']}**")
+        #         st.markdown(
+        #             f"<span style='font-size:18px; color:#111;'>"
+        #             f"<s>{e['ertek']}</s> → <b style='color:#8C00D2'>{e['ar']}</b>"
+        #             f"</span>",
+        #             unsafe_allow_html=True)
+        #     with col2:
+        #         st.markdown(f"**Mi fér bele?**")
+        #         st.markdown(e["reszletezes"], unsafe_allow_html=True)
+        #     with col3:
+        #         st.markdown(f"**Maradék összeg:** {e['maradek']}")
+        #         st.caption(e["javaslat"])
 
-    st.markdown("---")
+        st.markdown("---")
 
-    import streamlit.components.v1 as components
+        import streamlit.components.v1 as components
 
-    html = build_print_html(nem, kivalasztott, eredmeny_lista)
-    components.html(html, height=1200, scrolling=False)
+        html = build_print_html(nem, kivalasztott, eredmeny_lista)
+        components.html(html, height=1200, scrolling=False)
 
     # st.download_button(
     #     "💾 Nyomtatható ajánlat (HTML)",
