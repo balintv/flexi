@@ -394,7 +394,7 @@ div[data-testid="stNumberInputContainer"] {
 
 
 # --- nézetválasztó ---
-mode = st.radio("Válassz nézetet:", ["💰 Melyik a legjobb bérlet?", "📊 Mi fér a bérletbe?"])
+mode = st.radio("Válassz nézetet:", ["A: Területek + alkalmak → legjobb bérlet", "B: Területek → bérletlehetőségek"])
 
 st.markdown("&nbsp;", unsafe_allow_html=True)
 
@@ -409,7 +409,7 @@ if not paciens_nev:
 st.markdown("&nbsp;", unsafe_allow_html=True)
 
 # ========== "Mi fér a bérletbe? ==========
-if mode == "📊 Mi fér a bérletbe?":
+if mode == "B: Területek → bérletlehetőségek":
     kivalasztott = []
     for meret, teruletek_dict in ARLISTA[nem].items():
         st.markdown(f"##### {meret}")
