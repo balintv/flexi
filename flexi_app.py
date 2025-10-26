@@ -381,7 +381,7 @@ def build_print_html_b_mode(paciens_nem: str, paciens_nev: str, kivalasztott: li
               <div class="card__list">{e['reszletezes']}</div>
             </div>
             <div class="card__col">
-              <div class="card__label">Maradék összeg:</div>
+              
               <div class="card__value">{e['maradek']}</div>
               <div class="card__hint">{e['javaslat'] or ""}</div>
             </div>
@@ -725,7 +725,7 @@ else:
                     "ar": f"{lista_ar_int:,} Ft".replace(",", " "),
                     "ertek": f" ",
                     "reszletezes": "<b>Nincs jobb Flexi ajánlat, mint a listaár.</b>",
-                    "maradek": "0 Ft",
+                    "maradek": " ",
                     "javaslat": "Ebben az esetben a listaár kedvezőbb.",
                 }]
             else:
@@ -741,7 +741,7 @@ else:
                     "ar": f"{uj_ar:,} Ft".replace(",", " "),
                     "ertek": f"{lista_ar_int:,} Ft".replace(",", " "),
                     "reszletezes": f"<b>{legjobb_olcsobb['nev']}</b> + <b>{kulonbozet:,} Ft</b></b><br><b>Megtakarítás:</b> {(lista_ar_int - uj_ar):,} Ft".replace(",", " "),
-                    "maradek": f"{(legjobb_olcsobb['ertek'] - lista_ar_int):,} Ft".replace(",", " "),
+                    "maradek": " ",
                     "javaslat": f"A Flexi bérlet {legjobb_olcsobb['nev']} + különbözet opcióval olcsóbb, mint a listaár.",
                 }]
         else:
@@ -751,7 +751,7 @@ else:
                 "ar": f"{flexi_ar_int:,} Ft".replace(",", " "),
                 "ertek": f"{lista_ar_int:,} Ft".replace(",", " "),
                 "reszletezes": f"<b>Listaáron fizetve:</b> {lista_ar} <br><b>Flexi bérlet ára:</b> {flexi_ar} <br><b>Megtakarítás:</b> {megtakaritas:,} Ft".replace(",", " "),
-                "maradek": f"{maradek:,} Ft".replace(",", " "),
+                "maradek": f"b>Maradék összeg:</b> {maradek:,} Ft".replace(",", " "),
                 "javaslat": f"Ennyit spórol a következő kezeléseinél."
             }]
 
