@@ -511,7 +511,7 @@ if mode == "📊 Mi fér a bérletbe?":
     import streamlit.components.v1 as components
 
     html = build_print_html(nem, kivalasztott, eredmeny_lista)
-    components.html(html, height=0, scrolling=False)
+    components.html(html, scrolling=False)
 
     # st.download_button(
     #     "💾 Nyomtatható ajánlat (HTML)",
