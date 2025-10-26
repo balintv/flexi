@@ -726,7 +726,7 @@ else:
                     "ertek": f" ",
                     "reszletezes": "<b>Nincs jobb Flexi ajánlat, mint a listaár.</b>",
                     "maradek": " ",
-                    "javaslat": "Ebben az esetben a listaár kedvezőbb.",
+                    "javaslat": "Ebben az esetben a listaár a legkedvezőbb.",
                 }]
             else:
                 # a legjobb (tehát legmagasabb értékű, de még mindig olcsóbb)
@@ -740,7 +740,7 @@ else:
                     "nev": legjobb_olcsobb["nev"],
                     "ar": f"{uj_ar:,} Ft".replace(",", " "),
                     "ertek": f"{lista_ar_int:,} Ft".replace(",", " "),
-                    "reszletezes": f"<b>{legjobb_olcsobb['nev']}</b> + <b>{kulonbozet:,} Ft</b></b><br><b>Megtakarítás:</b> {(lista_ar_int - uj_ar):,} Ft".replace(",", " "),
+                    "reszletezes": f"<b>{legjobb_olcsobb['nev']}</b> + <b>{kulonbozet:,} Ft</b> <br><b>Megtakarítás:</b> {(lista_ar_int - uj_ar):,} Ft".replace(",", " "),
                     "maradek": " ",
                     "javaslat": f"A Flexi + különbözet opcióval kedvezőbb, mint listaáron.",
                 }]
