@@ -309,8 +309,8 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
   @media print {{
     .no-print {{ display:none !important; }}
     body {{ background:#fff; margin: 0; }}
+    header {{ margin-bottom: 8px; }}
     @page {{ size: A4 portrait; margin: 12mm; }}
-    header, footer {{ display: none !important; }}
     .wrap {{ max-width: 100%; margin:0; padding:0; }}
   }}
 </style>
