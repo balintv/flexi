@@ -152,7 +152,7 @@ def build_print_html(paciens_nem: str, paciens_nev: str, kivalasztott: list, ere
     )
 
     kartyak_html = ""
-    for e in eredmeny_lista:
+    for e in reversed(eredmeny_lista):
         kartyak_html += f"""
         <div class="card">
           <div class="card__row">
@@ -514,7 +514,7 @@ if mode == "📊 Mi fér a bérletbe?":
 
         import streamlit.components.v1 as components
 
-        html = build_print_html(nem, paciens_nev, kivalasztott, eredmeny_lista.reverse())
+        html = build_print_html(nem, paciens_nev, kivalasztott, eredmeny_lista)
         components.html(html, height=1200, scrolling=False)
 
         # st.download_button(
