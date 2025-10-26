@@ -480,7 +480,7 @@ if mode == "📊 Mi fér a bérletbe?":
                     if hanyszor >= 1:
                         javaslat = f"Még további {int(hanyszor)} alkalom {ma['meret']} méretű területre elég."
             if not javaslat:
-                javaslat = ""
+                javaslat = "Ennyit spórol a következő kezeléseinél."
 
             reszletezes = "<br>".join([f"{t}: {a} alkalom" for t, a in zip(teruletek, alkalmak)])
             eredmeny_lista.append({
