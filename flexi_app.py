@@ -404,10 +404,6 @@ st.markdown("&nbsp;", unsafe_allow_html=True)
 
 # ========== "Mi fér a bérletbe? ==========
 if mode == "📊 Mi fér a bérletbe?":
-    st.markdown("""
-    Válaszd ki, mely területeket szeretnéd szőrteleníteni, és nézd meg, hány alkalom fér bele az egyes Flexi bérletekbe.
-    """)
-
     kivalasztott = []
     for meret, teruletek_dict in ARLISTA[nem].items():
         st.markdown(f"##### {meret}")
