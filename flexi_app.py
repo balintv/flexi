@@ -750,7 +750,7 @@ else:
                 "nev": kombi,
                 "ar": f"{flexi_ar_int:,} Ft".replace(",", " "),
                 "ertek": f"{lista_ar_int:,} Ft".replace(",", " "),
-                "reszletezes": f"<b>Listaáron fizetve:</b> {lista_ar} <br><b>Flexi áron:</b> {flexi_ar} <br><b>Megtakarítás:</b> {megtakaritas:,} Ft".replace(",", " "),
+                "reszletezes": f"<b>Listaáron:</b> {lista_ar} <br><b>Flexi áron:</b> {flexi_ar} <br><b>Megtakarítás:</b> {megtakaritas:,} Ft".replace(",", " "),
                 "maradek": f"Maradék összeg:<br>{maradek:,} Ft".replace(",", " "),
                 "javaslat": f"Ennyit spórol a következő kezeléseinél."
             }]
