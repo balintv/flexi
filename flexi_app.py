@@ -341,12 +341,12 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
     </div>
   </div>
 
-    <script>
-    window.addEventListener('load', () => {
+  <script>
+    window.addEventListener('load', () => {{
       const h = document.body.scrollHeight;
-      window.parent.postMessage({ type: 'streamlit:setFrameHeight', height: h + 50 }, '*');
-    });
-    </script>
+      window.parent.postMessage({{ type: 'streamlit:setFrameHeight', height: h + 50 }}, '*');
+    }});
+  </script>
 
 </body>
 </html>
