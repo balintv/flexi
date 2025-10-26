@@ -252,7 +252,7 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
 }}
 
 .card__price {{
-  font-size: 16px;
+  font-size: 14px;
   margin-bottom: 12px;
 }}
 
