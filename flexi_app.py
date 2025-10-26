@@ -187,7 +187,9 @@ def general_docx(paciens_nem, kivalasztott, eredmeny_lista):
             p.style = "Intense Quote"
 
     doc.add_paragraph("")
-    doc.add_paragraph("Köszönjük, hogy a Bársonyt választotta!", style="Italic")
+    p = doc.add_paragraph()
+    run = p.add_run("Köszönjük, hogy a Bársonyt választotta!")
+    run.italic = True
 
     doc.save(buffer)
     buffer.seek(0)
