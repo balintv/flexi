@@ -849,6 +849,8 @@ else:
         #         delta_color="normal"
         #     )
 
+        megtakaritas = (int(legjobb["Megtakarítás (Ft)"])) * -1
+        maradek = int(legjobb["Maradék érték (Ft)"])
 
         html = build_print_html_b_mode(nem, paciens_nev, kivalasztott, [{
             "nev": kombi,
