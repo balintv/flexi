@@ -751,7 +751,7 @@ else:
                 "ar": f"{flexi_ar_int:,} Ft".replace(",", " "),
                 "ertek": f"{lista_ar_int:,} Ft".replace(",", " "),
                 "reszletezes": f"<b>Listaáron fizetve:</b> {lista_ar} <br><b>Flexi bérlet ára:</b> {flexi_ar} <br><b>Megtakarítás:</b> {megtakaritas:,} Ft".replace(",", " "),
-                "maradek": f"b>Maradék összeg:</b> {maradek:,} Ft".replace(",", " "),
+                "maradek": f"<b>Maradék összeg:</b> {maradek:,} Ft".replace(",", " "),
                 "javaslat": f"Ennyit spórol a következő kezeléseinél."
             }]
 
