@@ -12,6 +12,7 @@ import streamlit as st
 import io
 import os
 import datetime
+import requests
 
 from docx import Document
 from docx.shared import Inches, Pt
@@ -150,7 +151,18 @@ def general_docx(paciens_nem, kivalasztott, eredmeny_lista):
     doc = Document()
 
     # --- fejléc: logó és cím ---
-    doc.add_picture("/mount/src/flexi/barsony_logo.png", width=Inches(1.3))
+    #doc.add_picture("/mount/src/flexi/barsony_logo.png", width=Inches(1.3))
+
+    image_url = "https://www.barsony.hu/wp-content/uploads/2025/10/barsony-logo-lila-nyomtatashoz.png"
+
+    try:
+        response = requests.get(image_url)
+        response.raise_for_status()
+        image_bytes = io.BytesIO(response.content)
+        doc.add_picture(image_bytes, width=Inches(1.3))
+    except Exception as e:
+        print("Nem sikerült a logót betölteni:", e)
+        doc.add_paragraph("Bársony Orvos-Esztétika")
 
     title = doc.add_heading("Bársony Flexi Bérlet ajánlat", level=1)
     title.alignment = WD_ALIGN_PARAGRAPH.CENTER
