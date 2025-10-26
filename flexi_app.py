@@ -179,7 +179,7 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
 <html lang="hu">
 <head>
 <meta charset="utf-8">
-<title>Flexi Bérlet ajánlat</title>
+<title>Bársony Flexi Bérlet ajánlat</title>
 <style>
   :root {{
     --lila: #701783;
@@ -320,7 +320,7 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
     <header>
       <img src="{logo_url}" alt="Bársony logó">
       <div>
-        <div class="title">Bársony Flexi Bérlet ajánlat</div>
+        <div class="title">Flexi Bérlet ajánlat</div>
         <div class="meta">Dátum: {today} &nbsp;•&nbsp; Páciens neme: {paciens_nem}</div>
       </div>
     </header>
