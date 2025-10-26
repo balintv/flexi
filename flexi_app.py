@@ -9,17 +9,15 @@ import itertools
 import pandas as pd
 import streamlit as st
 
-from reportlab.lib.pagesizes import A4
-from reportlab.lib import colors
-from reportlab.lib.units import cm
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-from reportlab.platypus import Image
-from reportlab.lib.units import inch
-from reportlab.lib.styles import getSampleStyleSheet
 import io
 import datetime
 
+from docx import Document
+from docx.shared import Inches, Pt
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+
 # ========== Flexi bérletek és árlista ==========
+
 BERLETEK = [
     {"nev": "Flexi50",  "ar": 45000,  "ertek": 50000},
     {"nev": "Flexi100", "ar": 85000,  "ertek": 100000},
@@ -110,6 +108,7 @@ ARLISTA = {
 }
 
 # ========== Számítási logika ==========
+
 def legjobb_flexi_ajanlat(lista_ar_alkalom: float, alkalmak: int):
     teljes_listaar = lista_ar_alkalom * alkalmak
     eredmenyek = []
@@ -145,58 +144,52 @@ def legjobb_flexi_ajanlat(lista_ar_alkalom: float, alkalmak: int):
 
 # ========== Nyomtatáshoz ==========
 
-def general_pdf(paciens_nem, kivalasztott, eredmeny_lista):
+def general_docx(paciens_nem, kivalasztott, eredmeny_lista):
     buffer = io.BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=A4)
-    styles = getSampleStyleSheet()
-    story = []
+    doc = Document()
 
-    logo_path = "https://www.barsony.hu/wp-content/uploads/2025/10/barsony-logo-lila-nyomtatashoz.png"
+    # --- fejléc: logó és cím ---
     try:
-        logo = Image(logo_path, width=5*cm, height=1.27*cm)
-        logo.hAlign = 'CENTER'
-        story.append(logo)
+        doc.add_picture("https://www.barsony.hu/wp-content/uploads/2025/10/barsony-logo-lila-nyomtatashoz.png", width=Inches(1.3))
     except Exception:
-        # ha nincs logó, nem dől el a program
-        story.append(Paragraph("<b>Bársony Klinika</b>", styles["Normal"]))
-    story.append(Spacer(1, 6))
+        doc.add_paragraph("Bársony Orvos-Esztétika").alignment = WD_ALIGN_PARAGRAPH.LEFT
 
-    story.append(Paragraph("<b>Bársony Flexi Bérlet ajánlat</b>", styles["Title"]))
-    story.append(Spacer(1, 12))
-    story.append(Paragraph(f"Dátum: {datetime.date.today().strftime('%Y.%m.%d.')}", styles["Normal"]))
-    #story.append(Paragraph(f"Páciens neme: <b>{paciens_nem}</b>", styles["Normal"]))
-    story.append(Spacer(1, 12))
+    title = doc.add_paragraph("Bársony Flexi Bérlet ajánlat")
+    title.style = 'Title'
 
-    # --- kiválasztott kezelések ---
-    story.append(Paragraph("<b>Kiválasztott területek:</b>", styles["Heading3"]))
-    data = [["Terület", "Ár / alkalom (Ft)"]]
+    doc.add_paragraph(f"Dátum: {datetime.date.today().strftime('%Y.%m.%d.')}")
+    doc.add_paragraph(f"Páciens neme: {paciens_nem}")
+    doc.add_paragraph("")
+
+    # --- kiválasztott területek ---
+    doc.add_heading("Kiválasztott területek", level=2)
+    table = doc.add_table(rows=1, cols=2)
+    table.style = "Table Grid"
+    hdr_cells = table.rows[0].cells
+    hdr_cells[0].text = "Terület"
+    hdr_cells[1].text = "Ár / alkalom"
+
     for k in kivalasztott:
-        data.append([k["testrész"], f"{k['ar']:,} Ft".replace(",", " ")])
-    table = Table(data, colWidths=[8*cm, 6*cm])
-    table.setStyle(TableStyle([
-        ("BACKGROUND", (0,0), (-1,0), colors.lightgrey),
-        ("GRID", (0,0), (-1,-1), 0.25, colors.grey),
-        ("ALIGN", (1,1), (-1,-1), "RIGHT")
-    ]))
-    story.append(table)
-    story.append(Spacer(1, 20))
+        row_cells = table.add_row().cells
+        row_cells[0].text = k["testrész"]
+        row_cells[1].text = f"{k['ar']:,} Ft".replace(",", " ")
+
+    doc.add_paragraph("")
 
     # --- javasolt bérletek ---
-    story.append(Paragraph("<b>Javasolt bérlet(ek):</b>", styles["Heading3"]))
+    doc.add_heading("Javasolt bérlet(ek)", level=2)
     for e in eredmeny_lista:
-        story.append(Spacer(1, 10))
-        story.append(Paragraph(f"<b>{e['nev']}</b> – {e['ar']} (értéke: {e['ertek']})", styles["Normal"]))
-        story.append(Paragraph(f"<i>Mi fér bele:</i>", styles["Normal"]))
-        story.append(Paragraph(e["reszletezes"].replace("<br>", "<br/>"), styles["Normal"]))
-        story.append(Paragraph(f"Maradék összeg: {e['maradek']}", styles["Normal"]))
+        doc.add_paragraph(f"{e['nev']} – {e['ar']} (értéke: {e['ertek']})", style="Heading 3")
+        doc.add_paragraph(f"Mi fér bele:\n{e['reszletezes'].replace('<br>', '\\n')}")
+        doc.add_paragraph(f"Maradék összeg: {e['maradek']}")
         if e["javaslat"]:
-            story.append(Paragraph(f"<font color='grey'>{e['javaslat']}</font>", styles["Normal"]))
-        story.append(Spacer(1, 6))
+            p = doc.add_paragraph(e["javaslat"])
+            p.style = "Intense Quote"
 
-    story.append(Spacer(1, 12))
-    story.append(Paragraph("Köszönjük, hogy a Bársonyt választotta!", styles["Italic"]))
+    doc.add_paragraph("")
+    doc.add_paragraph("Köszönjük, hogy a Bársonyt választotta!", style="Italic")
 
-    doc.build(story)
+    doc.save(buffer)
     buffer.seek(0)
     return buffer
 
@@ -355,15 +348,14 @@ if mode == "📊 Mi fér a bérletbe?":
                 st.markdown(f"**Maradék összeg:** {e['maradek']}")
                 st.caption(e["javaslat"])
 
-    # --- PDF generálása és letöltési gomb ---
     st.markdown("---")
-    if st.button("📄 PDF generálása nyomtatáshoz"):
-        pdf_buffer = general_pdf(nem, kivalasztott, eredmeny_lista)
+    if st.button("📄 Word (DOCX) generálása"):
+        docx_buffer = general_docx(nem, kivalasztott, eredmeny_lista)
         st.download_button(
-            label="💾 PDF letöltése",
-            data=pdf_buffer,
-            file_name=f"barsony_flexi_ajanlat_{datetime.date.today()}.pdf",
-            mime="application/pdf"
+            label="💾 DOCX letöltése",
+            data=docx_buffer,
+            file_name=f"barsony_flexi_ajanlat_{datetime.date.today()}.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
 
 # ========== "Melyik a legjobb bérlet?" ==========
