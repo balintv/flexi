@@ -140,7 +140,7 @@ def legjobb_flexi_ajanlat(lista_ar_alkalom: float, alkalmak: int):
 # ========== Nyomtatáshoz ==========
 
 
-def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list) -> str:
+def build_print_html(paciens_nem: str, paciens_nev: str, paciens_email: str, kivalasztott: list, eredmeny_lista: list) -> str:
     # kivalasztott: [{"testrész": str, "ar": int}, ...]
     # eredmeny_lista: [{"nev","ar","ertek","reszletezes"(br-ekkel), "maradek","javaslat"}...]
 
@@ -162,7 +162,7 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
               <div class="card__price"><s>{e['ertek']}</s> → <b>{e['ar']}</b></div>
             </div>
             <div class="card__col">
-              <div class="card__label">Mi fér bele?</div>
+              <div class="card__label">Mi fér a bérletbe?</div>
               <div class="card__list">{e['reszletezes']}</div>
             </div>
             <div class="card__col">
@@ -321,7 +321,7 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
       <img src="{logo_url}" alt="Bársony logó">
       <div>
         <div class="title">Flexi Bérlet ajánlat</div>
-        <div class="meta">Dátum: {today} &nbsp;•&nbsp; Páciens neme: {paciens_nem}</div>
+        <div class="meta">Dátum: {today} &nbsp;•&nbsp; Páciens neve: {paciens_nev}</div>
       </div>
     </header>
 
@@ -338,6 +338,7 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
 
     <div class="actions no-print">
       <button class="btn-print" onclick="window.print()">🖨️ Nyomtatás / Mentés PDF-be</button>
+      <a class="btn-print" href="mailto:{paciens_email}?subject=Bársony Flexi Bérlet ajánlat&body=Kedves {paciens_nev},%0D%0A%0D%0AKüldöm Önnek a Flexi bérletre vonatkozó ajánlatot.%0D%0A%0D%0AAjánlat megtekintése: (másolja be a linket)%0D%0A%0D%0AÜdvözlettel,%0D%0AA Bársony csapata">✉️ Küldés emailben</a>
     </div>
   </div>
 
@@ -399,6 +400,18 @@ mode = st.radio("Válassz nézetet:", ["💰 Melyik a legjobb bérlet?", "📊 M
 
 # nem kiválasztása
 nem = st.radio("Páciens neme:", ["Nő", "Férfi"])
+
+# páciens adatai
+col1, col2 = st.columns(2)
+with col1:
+    paciens_nev = st.text_input("Név:")
+with col2:
+    paciens_email = st.text_input("Email:")
+
+if not paciens_nev:
+    paciens_nev = "-"
+if not paciens_email:
+    paciens_email = "-"
 
 st.markdown("&nbsp;", unsafe_allow_html=True)
 
@@ -508,7 +521,7 @@ if mode == "📊 Mi fér a bérletbe?":
 
         import streamlit.components.v1 as components
 
-        html = build_print_html(nem, kivalasztott, eredmeny_lista)
+        html = build_print_html(nem, paciens_nev, paciens_email, kivalasztott, eredmeny_lista)
         components.html(html, height=1200, scrolling=False)
 
     # st.download_button(
