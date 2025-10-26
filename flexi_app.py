@@ -517,11 +517,11 @@ if mode == "📊 Mi fér a bérletbe?":
         html = build_print_html(nem, paciens_nev, kivalasztott, eredmeny_lista)
         components.html(html, height=1200, scrolling=False)
 
-    st.download_button(
-        "💾 Nyomtatható ajánlat (HTML)",
-        data=html.encode("utf-8"),
-        file_name=f"barsony_flexi_ajanlat_{datetime.date.today()}.html",
-        mime="text/html")
+        st.download_button(
+            "💾 Nyomtatható ajánlat (HTML)",
+            data=html.encode("utf-8"),
+            file_name=f"barsony_flexi_ajanlat_{datetime.date.today()}.html",
+            mime="text/html")
 
 
 # ========== "Melyik a legjobb bérlet?" ==========
