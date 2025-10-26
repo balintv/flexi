@@ -739,8 +739,8 @@ else:
                 eredmeny_lista = [{
                     "nev": legjobb_olcsobb["nev"],
                     "ar": f"{uj_ar:,} Ft".replace(",", " "),
-                    "ertek": f"{legjobb_olcsobb['ertek']:,} Ft".replace(",", " "),
-                    "reszletezes": f"<b>{legjobb_olcsobb['nev']}</b> bérlet + <b>{kulonbozet:,} Ft</b> különbözet = <b>{uj_ar:,} Ft</b>.",
+                    "ertek": f"{lista_ar_int:,} Ft".replace(",", " "),
+                    "reszletezes": f"<b>{legjobb_olcsobb['nev']}</b> + <b>{kulonbozet:,} Ft</b></b><br><b>Megtakarítás:</b> {(lista_ar_int - uj_ar):,} Ft".replace(",", " "),
                     "maradek": f"{(legjobb_olcsobb['ertek'] - lista_ar_int):,} Ft".replace(",", " "),
                     "javaslat": f"A Flexi bérlet {legjobb_olcsobb['nev']} + különbözet opcióval olcsóbb, mint a listaár.",
                 }]
