@@ -218,16 +218,16 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
   }}
   
   .card__row {{
-  display: flex;
-    flex-wrap: wrap;
+    display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 20px;
+    gap: 24px;
+    flex-wrap: nowrap;
   }}
   
   .card__col {{
-    flex: 1 1 30%;
-    min-width: 200px;
+    flex: 1;
+    min-width: 0;
   }}
   
   .card__title {{
@@ -270,6 +270,13 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
   .card__hint {{
     color: #777;
     font-size: 12px;
+  }}
+
+  @media (max-width: 720px) {{
+    .card__row {{
+      flex-direction: column;
+      gap: 12px;
+    }}
   }}
 
   .actions {{ margin: 16px 0; }}
