@@ -149,13 +149,10 @@ def general_docx(paciens_nem, kivalasztott, eredmeny_lista):
     doc = Document()
 
     # --- fejléc: logó és cím ---
-    try:
-        doc.add_picture("https://www.barsony.hu/wp-content/uploads/2025/10/barsony-logo-lila-nyomtatashoz.png", width=Inches(1.3))
-    except Exception:
-        doc.add_paragraph("Bársony Orvos-Esztétika").alignment = WD_ALIGN_PARAGRAPH.LEFT
+    doc.add_picture("https://www.barsony.hu/wp-content/uploads/2025/10/barsony-logo-lila-nyomtatashoz.png", width=Inches(1.3))
 
-    title = doc.add_paragraph("Bársony Flexi Bérlet ajánlat")
-    title.style = 'Title'
+    title = doc.add_heading("Bársony Flexi Bérlet ajánlat", level=1)
+    title.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
     doc.add_paragraph(f"Dátum: {datetime.date.today().strftime('%Y.%m.%d.')}")
     doc.add_paragraph(f"Páciens neme: {paciens_nem}")
