@@ -419,7 +419,11 @@ def build_print_html_b_mode(paciens_nem: str, paciens_nev: str, kivalasztott: li
   table.list th, table.list td {{ padding:8px 10px; border:1px solid #ddd; }}
   table.list th {{ background:#f2f2f2; text-align:left; }}
   .right {{ text-align:right; }}
-
+  table.list th.right,
+  table.list td.right {{
+  text-align: right !important;
+  }}
+  
 .card {{
   border: 1px solid var(--keret);
   background: var(--lila-light);
@@ -472,7 +476,7 @@ def build_print_html_b_mode(paciens_nem: str, paciens_nev: str, kivalasztott: li
       <img src="{logo_url}" alt="Bársony logó">
       <div>
         <div class="title">Flexi Bérlet ajánlat</div>
-        <div class="meta">Páciens neve: {paciens_nev} &nbsp;•&nbsp; Dátum: {today} &nbsp;•&nbsp; Neme: {paciens_nem}</div>
+        <div class="meta">Páciens neve: {paciens_nev} &nbsp;•&nbsp; Dátum: {today}</div>
       </div>
     </header>
 
