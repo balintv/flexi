@@ -208,76 +208,94 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
   text-align: right !important;
   }}
 
-  .card {{
-    border: 1px solid var(--keret);
-    background: var(--lila-light);
-    border-radius: 12px;
-    padding: 16px 20px;
-    margin-bottom: 20px;
-    page-break-inside: avoid;
-  }}
-  
-  .card__row {{
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 24px;
-    flex-wrap: nowrap;
-  }}
-  
-  .card__col {{
-    flex: 1;
-    min-width: 0;
-  }}
-  
-  .card__title {{
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--lila);
-    margin-bottom: 4px;
-  }}
-  
-  .card__price {{
-    font-size: 16px;
-    margin-bottom: 12px;
-  }}
-  
-  .card__price s {{
-    color: #999;
-    margin-right: 4px;
-  }}
-  
-  .card__price b {{
-    color: var(--lila);
-  }}
-  
-  .card__label {{
-    font-weight: 600;
-    margin-bottom: 4px;
-    font-size: 14px;
-  }}
-  
-  .card__list {{
-    line-height: 1.5;
-    font-size: 14px;
-  }}
-  
-  .card__value {{
-    font-size: 14px;
-    font-weight: 600;
-  }}
-  
-  .card__hint {{
-    color: #777;
-    font-size: 12px;
-  }}
+.card {{
+  border: 1px solid var(--keret);
+  background: var(--lila-light);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-bottom: 22px;
+  page-break-inside: avoid;
+}}
 
-  @media (max-width: 720px) {{
-    .card__row {{
-      flex-direction: column;
-      gap: 12px;
-    }}
+.card__row {{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: nowrap;
+}}
+
+.card__col {{
+  flex-grow: 1;
+}}
+
+.card__col:first-child {{
+  flex-basis: 32%;
+  min-width: 180px;
+}}
+
+.card__col:nth-child(2) {{
+  flex-basis: 40%;
+  min-width: 200px;
+}}
+
+.card__col:last-child {{
+  flex-basis: 28%;
+  min-width: 160px;
+}}
+
+.card__title {{
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--lila);
+  margin-bottom: 4px;
+}}
+
+.card__price {{
+  font-size: 16px;
+  margin-bottom: 12px;
+}}
+
+.card__price s {{
+  color: #999;
+  margin-right: 4px;
+}}
+
+.card__price b {{
+  color: var(--lila);
+}}
+
+.card__label {{
+  font-weight: 600;
+  margin-bottom: 4px;
+  font-size: 14px;
+}}
+
+.card__list {{
+  line-height: 1.6;
+  font-size: 14px;
+}}
+
+.card__value {{
+  font-size: 14px;
+  font-weight: 600;
+}}
+
+.card__hint {{
+  color: #777;
+  font-size: 12px;
+}}
+
+/* Mobilbarát nézet csak nagyon kis képernyőn */
+@media (max-width: 600px) {{
+  .card__row {{
+    flex-direction: column;
+    gap: 10px;
   }}
+  .card__col {{
+    flex-basis: 100% !important;
+  }}
+}}
 
   .actions {{ margin: 16px 0; }}
   .btn-print {{
