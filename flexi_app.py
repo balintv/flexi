@@ -394,7 +394,7 @@ div[data-testid="stNumberInputContainer"] {
 
 
 # --- nézetválasztó ---
-mode = st.radio("Válassz nézetet:", ["A: Területek → bérletlehetőségek", "B: Területek, fix alkalmak → legjobb bérlet"])
+mode = st.radio("Tervezési mód:", ["A: Területek → bérletlehetőségek", "B: Területek, fix alkalmak → legjobb bérlet"])
 
 st.markdown("&nbsp;", unsafe_allow_html=True)
 
