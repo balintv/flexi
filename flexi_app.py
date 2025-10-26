@@ -737,35 +737,35 @@ else:
 
         # st.info(f"**Teljes csomag listaáron:** {osszes_ar:,} Ft".replace(",", " "))
 
-        # legjobb, minden = legjobb_flexi_ajanlat(osszes_ar, 1)
+        legjobb, minden = legjobb_flexi_ajanlat(osszes_ar, 1)
 
-        # kombinacio_szoveg = legjobb["Kombináció"].replace("Flexi", "").replace(" + ", "+").strip()
-        # kombi = f"Flexi{kombinacio_szoveg}"
-        # flexi_ar_int = int(legjobb["Flexi ára"])
-        # lista_ar_int = int(legjobb["Listaáron fizetne"])
-        # maradek = int(legjobb["Maradék érték (Ft)"])
+        kombinacio_szoveg = legjobb["Kombináció"].replace("Flexi", "").replace(" + ", "+").strip()
+        kombi = f"Flexi{kombinacio_szoveg}"
+        flexi_ar_int = int(legjobb["Flexi ára"])
+        lista_ar_int = int(legjobb["Listaáron fizetne"])
+        maradek = int(legjobb["Maradék érték (Ft)"])
 
-        # flexi_ar = f"{flexi_ar_int:,} Ft".replace(",", " ")
-        # lista_ar = f"{lista_ar_int:,} Ft".replace(",", " ")
+        flexi_ar = f"{flexi_ar_int:,} Ft".replace(",", " ")
+        lista_ar = f"{lista_ar_int:,} Ft".replace(",", " ")
 
-        # # árlogika (HTML-kompatibilis formázásokkal)
-        # if flexi_ar_int < lista_ar_int:
-        #     ar_sor = f"<s>{lista_ar}</s> → <b>{flexi_ar}</b>"
-        #     ajandek_sor = f"+ {maradek:,} Ft levásárolható érték".replace(",", " ") if maradek > 0 else ""
-        # elif flexi_ar_int == lista_ar_int:
-        #     ar_sor = f"<b>{flexi_ar}</b>"
-        #     ajandek_sor = f"+ {maradek:,} Ft levásárolható érték".replace(",", " ") if maradek > 0 else ""
-        # else:
-        #     plusz_fizet = flexi_ar_int - lista_ar_int
-        #     osszes_tobblet = maradek - plusz_fizet
-        #     plusz_fizet_szoveg = f"{plusz_fizet:,} Ft".replace(",", " ")
-        #     maradek_szoveg = f"{maradek:,} Ft".replace(",", " ")
-        #     osszes_tobblet_szoveg = f"{osszes_tobblet:,}".replace(",", " ")
-        #     ar_sor = (
-        #         f"+{plusz_fizet_szoveg} ráfordítással +{maradek_szoveg} értéket kap, "
-        #         f"így {osszes_tobblet_szoveg} forintot spórol a következő kezelésein!"
-        #     )
-        #     ajandek_sor = ""
+        # árlogika (HTML-kompatibilis formázásokkal)
+        if flexi_ar_int < lista_ar_int:
+            ar_sor = f"<s>{lista_ar}</s> → <b>{flexi_ar}</b>"
+            ajandek_sor = f"+ {maradek:,} Ft levásárolható érték".replace(",", " ") if maradek > 0 else ""
+        elif flexi_ar_int == lista_ar_int:
+            ar_sor = f"<b>{flexi_ar}</b>"
+            ajandek_sor = f"+ {maradek:,} Ft levásárolható érték".replace(",", " ") if maradek > 0 else ""
+        else:
+            plusz_fizet = flexi_ar_int - lista_ar_int
+            osszes_tobblet = maradek - plusz_fizet
+            plusz_fizet_szoveg = f"{plusz_fizet:,} Ft".replace(",", " ")
+            maradek_szoveg = f"{maradek:,} Ft".replace(",", " ")
+            osszes_tobblet_szoveg = f"{osszes_tobblet:,}".replace(",", " ")
+            ar_sor = (
+                f"+{plusz_fizet_szoveg} ráfordítással +{maradek_szoveg} értéket kap, "
+                f"így {osszes_tobblet_szoveg} forintot spórol a következő kezelésein!"
+            )
+            ajandek_sor = ""
 
         # # majd jön a HTML-doboz, ahogy eddig:
         # cim_html = (
