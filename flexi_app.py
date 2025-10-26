@@ -10,6 +10,7 @@ import pandas as pd
 import streamlit as st
 
 import io
+import os
 import datetime
 
 from docx import Document
@@ -149,7 +150,9 @@ def general_docx(paciens_nem, kivalasztott, eredmeny_lista):
     doc = Document()
 
     # --- fejléc: logó és cím ---
-    doc.add_picture("barsony_logo.png", width=Inches(1.3))
+    print(os.listdir(os.path.dirname(__file__)))
+    logo_path = os.path.join(os.path.dirname(__file__), "barsony_logo.png")
+    doc.add_picture(logo_path, width=Inches(1.3))
 
     title = doc.add_heading("Bársony Flexi Bérlet ajánlat", level=1)
     title.alignment = WD_ALIGN_PARAGRAPH.CENTER
