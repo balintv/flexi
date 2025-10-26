@@ -9,14 +9,12 @@ import itertools
 import pandas as pd
 import streamlit as st
 
-import io
-import os
-import datetime
-import requests
-
 from docx import Document
-from docx.shared import Inches, Pt
+from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.oxml.ns import qn
+from docx.oxml import OxmlElement
+import requests, io, datetime
 
 # ========== Flexi bérletek és árlista ==========
 
@@ -146,64 +144,95 @@ def legjobb_flexi_ajanlat(lista_ar_alkalom: float, alkalmak: int):
 
 # ========== Nyomtatáshoz ==========
 
+
 def general_docx(paciens_nem, kivalasztott, eredmeny_lista):
     buffer = io.BytesIO()
     doc = Document()
 
-    # --- fejléc: logó és cím ---
-    #doc.add_picture("/mount/src/flexi/barsony_logo.png", width=Inches(1.3))
+    # --- LOGÓ + CÍM fejléc ---
+    section = doc.sections[0]
+    section.top_margin = Inches(0.6)
+    section.bottom_margin = Inches(0.6)
+    section.left_margin = Inches(0.8)
+    section.right_margin = Inches(0.8)
 
     image_url = "https://www.barsony.hu/wp-content/uploads/2025/10/barsony-logo-lila-nyomtatashoz.png"
-
     try:
         response = requests.get(image_url)
         response.raise_for_status()
         image_bytes = io.BytesIO(response.content)
-        doc.add_picture(image_bytes, width=Inches(1.3))
-    except Exception as e:
-        print("Nem sikerült a logót betölteni:", e)
-        doc.add_paragraph("Bársony Orvos-Esztétika")
+        doc.add_picture(image_bytes, width=Inches(1.4))
+    except Exception:
+        doc.add_paragraph("Bársony Orvos-Esztétika").alignment = WD_ALIGN_PARAGRAPH.LEFT
 
-    title = doc.add_heading("Bársony Flexi Bérlet ajánlat", level=1)
+    title = doc.add_paragraph("Bársony Flexi Bérlet ajánlat")
     title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = title.runs[0]
+    run.font.size = Pt(20)
+    run.font.color.rgb = RGBColor(140, 0, 210)  # Bársony-lila
+    run.bold = True
 
-    doc.add_paragraph(f"Dátum: {datetime.date.today().strftime('%Y.%m.%d.')}")
-    doc.add_paragraph(f"Páciens neme: {paciens_nem}")
+    # --- Dátum és páciens ---
+    p = doc.add_paragraph(f"Dátum: {datetime.date.today().strftime('%Y.%m.%d.')}")
+    p.style.font.size = Pt(10)
+    doc.add_paragraph(f"Páciens neme: {paciens_nem}", style="Normal")
     doc.add_paragraph("")
 
-    # --- kiválasztott területek ---
-    doc.add_heading("Kiválasztott területek", level=2)
+    # --- Kiválasztott területek ---
+    doc.add_paragraph("Kiválasztott területek", style="Heading 2")
     table = doc.add_table(rows=1, cols=2)
-    table.style = "Table Grid"
+    table.style = "Light List"
     hdr_cells = table.rows[0].cells
     hdr_cells[0].text = "Terület"
-    hdr_cells[1].text = "Ár / alkalom"
-
+    hdr_cells[1].text = "Ár / alkalom (Ft)"
     for k in kivalasztott:
         row_cells = table.add_row().cells
         row_cells[0].text = k["testrész"]
         row_cells[1].text = f"{k['ar']:,} Ft".replace(",", " ")
-
     doc.add_paragraph("")
 
-    # --- javasolt bérletek ---
-    doc.add_heading("Javasolt bérlet(ek)", level=2)
+    # --- Javasolt bérletek blokk ---
+    doc.add_paragraph("Javasolt bérlet(ek)", style="Heading 2")
     for e in eredmeny_lista:
-        doc.add_paragraph(f"{e['nev']} – {e['ar']} (értéke: {e['ertek']})", style="Heading 3")
-        doc.add_paragraph(f"Mi fér bele:\n{e['reszletezes'].replace('<br>', '\\n')}")
-        doc.add_paragraph(f"Maradék összeg: {e['maradek']}")
-        if e["javaslat"]:
-            p = doc.add_paragraph(e["javaslat"])
-            p.style = "Intense Quote"
+        doc.add_paragraph("")  # kis térköz
+        # felső sor: név + ár
+        para = doc.add_paragraph()
+        para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        run = para.add_run(f"💜 {e['nev']}")
+        run.bold = True
+        run.font.size = Pt(14)
+        run.font.color.rgb = RGBColor(140, 0, 210)
+        doc.add_paragraph(f"Ár: {e['ar']} (értéke: {e['ertek']})").alignment = WD_ALIGN_PARAGRAPH.CENTER
 
-    doc.add_paragraph("")
+        # 3 „oszlop” imitálása – egymás alatti táblázatként
+        data = [
+            ["Mi fér bele", "Maradék összeg", "Javaslat"],
+            [e["reszletezes"].replace("<br>", "\n"), e["maradek"], e["javaslat"]],
+        ]
+        tbl = doc.add_table(rows=2, cols=3)
+        tbl.style = "Table Grid"
+        for i, row in enumerate(data):
+            for j, text in enumerate(row):
+                tbl.cell(i, j).text = text if text else ""
+        # stílus finomítás
+        tbl.autofit = True
+        for cell in tbl.rows[0].cells:
+            for p in cell.paragraphs:
+                p.runs[0].bold = True
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        doc.add_paragraph("")
+
+    # --- záró mondat ---
     p = doc.add_paragraph()
     run = p.add_run("Köszönjük, hogy a Bársonyt választotta!")
     run.italic = True
+    run.font.color.rgb = RGBColor(140, 0, 210)
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
     doc.save(buffer)
     buffer.seek(0)
     return buffer
+
 
 # ========== Streamlit UI ==========
 
