@@ -9,11 +9,6 @@ import itertools
 import pandas as pd
 import streamlit as st
 
-from docx import Document
-from docx.shared import Inches, Pt, RGBColor
-from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.oxml.ns import qn
-from docx.oxml import OxmlElement
 import requests, io, datetime
 
 # ========== Flexi bérletek és árlista ==========
@@ -145,98 +140,153 @@ def legjobb_flexi_ajanlat(lista_ar_alkalom: float, alkalmak: int):
 # ========== Nyomtatáshoz ==========
 
 
-def general_docx(paciens_nem, kivalasztott, eredmeny_lista):
-    buffer = io.BytesIO()
-    doc = Document()
+def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list) -> str:
+    # kivalasztott: [{"testrész": str, "ar": int}, ...]
+    # eredmeny_lista: [{"nev","ar","ertek","reszletezes"(br-ekkel), "maradek","javaslat"}...]
 
-    # --- LOGÓ + CÍM fejléc ---
-    section = doc.sections[0]
-    section.top_margin = Inches(0.6)
-    section.bottom_margin = Inches(0.6)
-    section.left_margin = Inches(0.8)
-    section.right_margin = Inches(0.8)
+    logo_url = "https://www.barsony.hu/wp-content/uploads/2025/10/barsony-logo-lila-nyomtatashoz.png"
+    today = datetime.date.today().strftime("%Y.%m.%d.")
 
-    image_url = "https://www.barsony.hu/wp-content/uploads/2025/10/barsony-logo-lila-nyomtatashoz.png"
-    try:
-        response = requests.get(image_url)
-        response.raise_for_status()
-        image_bytes = io.BytesIO(response.content)
-        doc.add_picture(image_bytes, width=Inches(1.4))
-    except Exception:
-        doc.add_paragraph("Bársony Orvos-Esztétika").alignment = WD_ALIGN_PARAGRAPH.LEFT
+    kiv_html = "".join(
+        f"<tr><td>{k['testrész']}</td><td class='right'>{k['ar']:,} Ft</td></tr>".replace(",", " ")
+        for k in kivalasztott
+    )
 
-    title = doc.add_paragraph("Bársony Flexi Bérlet ajánlat")
-    title.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run = title.runs[0]
-    run.font.size = Pt(20)
-    run.font.color.rgb = RGBColor(140, 0, 210)  # Bársony-lila
-    run.bold = True
-
-    # --- Dátum és páciens ---
-    p = doc.add_paragraph(f"Dátum: {datetime.date.today().strftime('%Y.%m.%d.')}")
-    p.style.font.size = Pt(10)
-    doc.add_paragraph(f"Páciens neme: {paciens_nem}", style="Normal")
-    doc.add_paragraph("")
-
-    # --- Kiválasztott területek ---
-    doc.add_paragraph("Kiválasztott területek", style="Heading 2")
-    table = doc.add_table(rows=1, cols=2)
-    table.style = "Light List"
-    hdr_cells = table.rows[0].cells
-    hdr_cells[0].text = "Terület"
-    hdr_cells[1].text = "Ár / alkalom (Ft)"
-    for k in kivalasztott:
-        row_cells = table.add_row().cells
-        row_cells[0].text = k["testrész"]
-        row_cells[1].text = f"{k['ar']:,} Ft".replace(",", " ")
-    doc.add_paragraph("")
-
-    # --- Javasolt bérletek blokk ---
-    doc.add_paragraph("Javasolt bérlet(ek)", style="Heading 2")
+    kartyak_html = ""
     for e in eredmeny_lista:
-        doc.add_paragraph("")  # kis térköz
-        # felső sor: név + ár
-        para = doc.add_paragraph()
-        para.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        run = para.add_run(f"💜 {e['nev']}")
-        run.bold = True
-        run.font.size = Pt(14)
-        run.font.color.rgb = RGBColor(140, 0, 210)
-        doc.add_paragraph(f"Ár: {e['ar']} (értéke: {e['ertek']})").alignment = WD_ALIGN_PARAGRAPH.CENTER
+        kartyak_html += f"""
+        <div class="card">
+          <div class="card__head">
+            <div class="card__title">💜 {e['nev']}</div>
+            <div class="card__price"><s>{e['ertek']}</s> → <b>{e['ar']}</b></div>
+          </div>
+          <div class="card__cols">
+            <div>
+              <div class="card__label">Mi fér bele?</div>
+              <div class="card__list">{e['reszletezes']}</div>
+            </div>
+            <div>
+              <div class="card__label">Maradék</div>
+              <div class="card__value">{e['maradek']}</div>
+            </div>
+            <div>
+              <div class="card__label">Javaslat</div>
+              <div class="card__hint">{e['javaslat'] or ""}</div>
+            </div>
+          </div>
+        </div>
+        """
 
-        # 3 „oszlop” imitálása – egymás alatti táblázatként
-        data = [
-            ["Mi fér bele", "Maradék összeg", "Javaslat"],
-            [e["reszletezes"].replace("<br>", "\n"), e["maradek"], e["javaslat"]],
-        ]
-        tbl = doc.add_table(rows=2, cols=3)
-        tbl.style = "Table Grid"
-        for i, row in enumerate(data):
-            for j, text in enumerate(row):
-                tbl.cell(i, j).text = text if text else ""
-        # stílus finomítás
-        tbl.autofit = True
-        for cell in tbl.rows[0].cells:
-            for p in cell.paragraphs:
-                p.runs[0].bold = True
-                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        doc.add_paragraph("")
+    return f"""
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<title>Bársony Flexi Bérlet ajánlat</title>
+<style>
+  :root {{
+    --lila: #8C00D2;
+    --lila-light: #f8f4fc;
+    --szurke: #666;
+    --keret: #e8d9f9;
+  }}
+  * {{ box-sizing: border-box; }}
+  body {{
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "DejaVu Sans", sans-serif;
+    color:#222; margin:0; background:#fff;
+  }}
+  .wrap {{ max-width: 900px; margin: 24px auto; padding: 0 16px; }}
+  header {{ display:flex; align-items:center; gap:16px; margin-bottom:16px; }}
+  header img {{ height:38px; }}
+  header .title {{ font-size:24px; font-weight:700; color:var(--lila); line-height:1.2; }}
+  .meta {{ color:#555; font-size:14px; margin: 4px 0 16px; }}
 
-    # --- záró mondat ---
-    p = doc.add_paragraph()
-    run = p.add_run("Köszönjük, hogy a Bársonyt választotta!")
-    run.italic = True
-    run.font.color.rgb = RGBColor(140, 0, 210)
-    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+  h2 {{ margin:20px 0 10px; font-size:18px; color:#333; }}
+  table.list {{ width:100%; border-collapse:collapse; font-size:14px; }}
+  table.list th, table.list td {{ padding:8px 10px; border:1px solid #ddd; }}
+  table.list th {{ background:#f2f2f2; text-align:left; }}
+  .right {{ text-align:right; }}
 
-    doc.save(buffer)
-    buffer.seek(0)
-    return buffer
+  .grid {{ display:grid; grid-template-columns: 1fr; gap:16px; }}
+  @media (min-width: 820px) {{
+    .grid {{ grid-template-columns: 1fr; gap:16px; }} /* egy oszlop nyomtatásban is szebben törik */
+  }}
+  .card {{
+    border:1px solid var(--keret);
+    background:var(--lila-light);
+    border-radius:12px;
+    padding:14px;
+    page-break-inside: avoid;
+  }}
+  .card__head {{
+    display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+    margin-bottom:8px;
+  }}
+  .card__title {{ font-weight:700; color:var(--lila); font-size:16px; }}
+  .card__price s {{ color:#999; }}
+  .card__price b {{ color:var(--lila); }}
+  .card__cols {{
+    display:grid; gap:12px;
+    grid-template-columns: 1fr;
+  }}
+  @media (min-width: 700px) {{
+    .card__cols {{ grid-template-columns: 2fr 1fr 1fr; }}
+  }}
+  .card__label {{ font-size:12px; color:#777; margin-bottom:4px; }}
+  .card__list {{ white-space:pre-line; font-size:14px; }}
+  .card__value {{ font-size:14px; font-weight:600; }}
+  .card__hint {{ font-size:12px; color:#777; }}
+
+  .actions {{ margin: 16px 0; }}
+  .btn-print {{
+    appearance:none; border:1px solid var(--keret); background:#fff;
+    padding:8px 12px; border-radius:8px; cursor:pointer; color:#333;
+  }}
+  .btn-print:hover {{ border-color: var(--lila); color: var(--lila); }}
+
+  /* Print beállítások */
+  @media print {{
+    .no-print {{ display:none !important; }}
+    body {{ background:#fff; }}
+    @page {{ size: A4; margin: 12mm; }}
+    header {{ margin-bottom: 8px; }}
+    .wrap {{ max-width: 100%; margin:0; padding:0; }}
+  }}
+</style>
+</head>
+<body>
+  <div class="wrap" id="print-area">
+    <header>
+      <img src="{logo_url}" alt="Bársony logó">
+      <div>
+        <div class="title">Bársony Flexi Bérlet ajánlat</div>
+        <div class="meta">Dátum: {today} &nbsp;•&nbsp; Páciens neme: {paciens_nem}</div>
+      </div>
+    </header>
+
+    <h2>Kiválasztott területek</h2>
+    <table class="list">
+      <tr><th>Terület</th><th class="right">Ár / alkalom</th></tr>
+      {kiv_html}
+    </table>
+
+    <h2>Javasolt bérlet(ek)</h2>
+    <div class="grid">
+      {kartyak_html}
+    </div>
+
+    <div class="actions no-print">
+      <button class="btn-print" onclick="window.print()">🖨️ Nyomtatás / Mentés PDF-be</button>
+    </div>
+  </div>
+</body>
+</html>
+"""
 
 
 # ========== Streamlit UI ==========
 
-st.set_page_config(page_title="Flexi bérlet ajánló", layout="centered", page_icon="👛")
+st.set_page_config(page_title="Flexi Bérlet ajánló", layout="centered", page_icon="👛")
 
 st.markdown("""
 <style>
@@ -390,14 +440,18 @@ if mode == "📊 Mi fér a bérletbe?":
                 st.caption(e["javaslat"])
 
     st.markdown("---")
-    if st.button("📄 Word (DOCX) generálása"):
-        docx_buffer = general_docx(nem, kivalasztott, eredmeny_lista)
-        st.download_button(
-            label="💾 DOCX letöltése",
-            data=docx_buffer,
-            file_name=f"barsony_flexi_ajanlat_{datetime.date.today()}.docx",
-            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        )
+
+    import streamlit.components.v1 as components
+
+    html = build_print_html(nem, kivalasztott, eredmeny_lista)
+    components.html(html, height=900, scrolling=True)
+
+    st.download_button(
+        "💾 Nyomtatható ajánlat (HTML)",
+        data=html.encode("utf-8"),
+        file_name=f"barsony_flexi_ajanlat_{datetime.date.today()}.html",
+        mime="text/html")
+
 
 # ========== "Melyik a legjobb bérlet?" ==========
 else:
