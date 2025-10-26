@@ -398,15 +398,17 @@ div[data-testid="stNumberInputContainer"] {
 # --- nézetválasztó ---
 mode = st.radio("Válassz nézetet:", ["💰 Melyik a legjobb bérlet?", "📊 Mi fér a bérletbe?"])
 
+st.markdown("&nbsp;", unsafe_allow_html=True)
+
 # nem kiválasztása
 nem = st.radio("Páciens neme:", ["Nő", "Férfi"])
 
 # páciens adatai
 col1, col2 = st.columns(2)
 with col1:
-    paciens_nev = st.text_input("Név:")
+    paciens_nev = st.text_input("Páciens neve:")
 with col2:
-    paciens_email = st.text_input("Email:")
+    paciens_email = st.text_input("Páciens e-mail:")
 
 if not paciens_nev:
     paciens_nev = "-"
