@@ -341,10 +341,12 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
     </div>
   </div>
 
-  <script>
-  // Automatikusan méretezi az iframe-et a tartalomhoz
-  window.parent.postMessage({{ streamlitResize: document.body.scrollHeight }}, "*");
-  </script>
+    <script>
+    window.addEventListener('load', () => {
+      const h = document.body.scrollHeight;
+      window.parent.postMessage({ type: 'streamlit:setFrameHeight', height: h + 50 }, '*');
+    });
+    </script>
 
 </body>
 </html>
@@ -511,7 +513,7 @@ if mode == "📊 Mi fér a bérletbe?":
     import streamlit.components.v1 as components
 
     html = build_print_html(nem, kivalasztott, eredmeny_lista)
-    components.html(html, scrolling=False)
+    components.html(html, height=1200, scrolling=False)
 
     # st.download_button(
     #     "💾 Nyomtatható ajánlat (HTML)",
