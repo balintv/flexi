@@ -308,9 +308,9 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
   /* Print beállítások */
   @media print {{
     .no-print {{ display:none !important; }}
-    body {{ background:#fff; }}
-    @page {{ size: A4; margin: 12mm; }}
-    header {{ margin-bottom: 8px; }}
+    body {{ background:#fff; margin: 0; }}
+    @page {{ size: A4 portrait; margin: 12mm; }}
+    header, footer {{ display: none !important; }}
     .wrap {{ max-width: 100%; margin:0; padding:0; }}
   }}
 </style>
@@ -340,6 +340,12 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
       <button class="btn-print" onclick="window.print()">🖨️ Nyomtatás / Mentés PDF-be</button>
     </div>
   </div>
+
+  <script>
+  // Automatikusan méretezi az iframe-et a tartalomhoz
+  window.parent.postMessage({ streamlitResize: document.body.scrollHeight }, "*");
+  </script>
+
 </body>
 </html>
 """
@@ -505,13 +511,13 @@ if mode == "📊 Mi fér a bérletbe?":
     import streamlit.components.v1 as components
 
     html = build_print_html(nem, kivalasztott, eredmeny_lista)
-    components.html(html, height=900, scrolling=True)
+    components.html(html, height=0, scrolling=False)
 
-    st.download_button(
-        "💾 Nyomtatható ajánlat (HTML)",
-        data=html.encode("utf-8"),
-        file_name=f"barsony_flexi_ajanlat_{datetime.date.today()}.html",
-        mime="text/html")
+    # st.download_button(
+    #     "💾 Nyomtatható ajánlat (HTML)",
+    #     data=html.encode("utf-8"),
+    #     file_name=f"barsony_flexi_ajanlat_{datetime.date.today()}.html",
+    #     mime="text/html")
 
 
 # ========== "Melyik a legjobb bérlet?" ==========
