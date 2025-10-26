@@ -156,21 +156,18 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
     for e in eredmeny_lista:
         kartyak_html += f"""
         <div class="card">
-          <div class="card__head">
-            <div class="card__title">💜 {e['nev']}</div>
-            <div class="card__price"><s>{e['ertek']}</s> → <b>{e['ar']}</b></div>
-          </div>
-          <div class="card__cols">
-            <div>
+          <div class="card__row">
+            <div class="card__col">
+              <div class="card__title">💜 {e['nev']}</div>
+              <div class="card__price"><s>{e['ertek']}</s> → <b>{e['ar']}</b></div>
+            </div>
+            <div class="card__col">
               <div class="card__label">Mi fér bele?</div>
               <div class="card__list">{e['reszletezes']}</div>
             </div>
-            <div>
-              <div class="card__label">Maradék</div>
+            <div class="card__col">
+              <div class="card__label">Maradék összeg:</div>
               <div class="card__value">{e['maradek']}</div>
-            </div>
-            <div>
-              <div class="card__label">Javaslat</div>
               <div class="card__hint">{e['javaslat'] or ""}</div>
             </div>
           </div>
@@ -211,35 +208,69 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
   text-align: right !important;
   }}
 
-  .grid {{ display:grid; grid-template-columns: 1fr; gap:16px; }}
-  @media (min-width: 820px) {{
-    .grid {{ grid-template-columns: 1fr; gap:16px; }} /* egy oszlop nyomtatásban is szebben törik */
-  }}
   .card {{
-    border:1px solid var(--keret);
-    background:var(--lila-light);
-    border-radius:12px;
-    padding:14px;
+    border: 1px solid var(--keret);
+    background: var(--lila-light);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
     page-break-inside: avoid;
   }}
-  .card__head {{
-    display:flex; align-items:baseline; justify-content:space-between; gap:12px;
-    margin-bottom:8px;
+  
+  .card__row {{
+  display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
   }}
-  .card__title {{ font-weight:700; color:var(--lila); font-size:16px; }}
-  .card__price s {{ color:#999; }}
-  .card__price b {{ color:var(--lila); }}
-  .card__cols {{
-    display:grid; gap:12px;
-    grid-template-columns: 1fr;
+  
+  .card__col {{
+    flex: 1 1 30%;
+    min-width: 200px;
   }}
-  @media (min-width: 700px) {{
-    .card__cols {{ grid-template-columns: 2fr 1fr 1fr; }}
+  
+  .card__title {{
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--lila);
+    margin-bottom: 4px;
   }}
-  .card__label {{ font-size:12px; color:#777; margin-bottom:4px; }}
-  .card__list {{ white-space:pre-line; font-size:14px; }}
-  .card__value {{ font-size:14px; font-weight:600; }}
-  .card__hint {{ font-size:12px; color:#777; }}
+  
+  .card__price {{
+    font-size: 16px;
+    margin-bottom: 12px;
+  }}
+  
+  .card__price s {{
+    color: #999;
+    margin-right: 4px;
+  }}
+  
+  .card__price b {{
+    color: var(--lila);
+  }}
+  
+  .card__label {{
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-size: 14px;
+  }}
+  
+  .card__list {{
+    line-height: 1.5;
+    font-size: 14px;
+  }}
+  
+  .card__value {{
+    font-size: 14px;
+    font-weight: 600;
+  }}
+  
+  .card__hint {{
+    color: #777;
+    font-size: 12px;
+  }}
 
   .actions {{ margin: 16px 0; }}
   .btn-print {{
