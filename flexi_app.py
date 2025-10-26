@@ -716,9 +716,9 @@ else:
             if not kisebb_berletek:
                 # nincs jobb flexi ajánlat
                 eredmeny_lista = [{
-                    "nev": "–",
+                    "nev": " ",
                     "ar": f"{lista_ar_int:,} Ft".replace(",", " "),
-                    "ertek": f"{lista_ar_int:,} Ft".replace(",", " "),
+                    "ertek": f" ",
                     "reszletezes": "<b>Nincs jobb Flexi ajánlat, mint a listaár.</b>",
                     "maradek": "0 Ft",
                     "javaslat": "Ebben az esetben a listaár kedvezőbb.",
