@@ -185,7 +185,7 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
 <title>Bársony Flexi Bérlet ajánlat</title>
 <style>
   :root {{
-    --lila: #8C00D2;
+    --lila: #701783;
     --lila-light: #f8f4fc;
     --szurke: #666;
     --keret: #e8d9f9;
@@ -206,6 +206,10 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
   table.list th, table.list td {{ padding:8px 10px; border:1px solid #ddd; }}
   table.list th {{ background:#f2f2f2; text-align:left; }}
   .right {{ text-align:right; }}
+  table.list th.right,
+  table.list td.right {{
+  text-align: right !important;
+  }}
 
   .grid {{ display:grid; grid-template-columns: 1fr; gap:16px; }}
   @media (min-width: 820px) {{
