@@ -284,6 +284,7 @@ def build_print_html(paciens_nem: str, kivalasztott: list, eredmeny_lista: list)
 .card__hint {{
   color: #777;
   font-size: 12px;
+  margin-top: 5px;
 }}
 
 /* Mobilbarát nézet csak nagyon kis képernyőn */
