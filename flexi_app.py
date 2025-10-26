@@ -320,7 +320,7 @@ def build_print_html(paciens_nem: str, paciens_nev: str, kivalasztott: list, ere
       <img src="{logo_url}" alt="Bársony logó">
       <div>
         <div class="title">Flexi Bérlet ajánlat</div>
-        <div class="meta">Dátum: {today} &nbsp;•&nbsp; Páciens neve: {paciens_nev}</div>
+        <div class="meta">Páciens neve: {paciens_nev} &nbsp;•&nbsp; Dátum: {today}</div>
       </div>
     </header>
 
@@ -514,7 +514,7 @@ if mode == "📊 Mi fér a bérletbe?":
 
         import streamlit.components.v1 as components
 
-        html = build_print_html(nem, paciens_nev, kivalasztott, eredmeny_lista)
+        html = build_print_html(nem, paciens_nev, kivalasztott, eredmeny_lista.reverse())
         components.html(html, height=1200, scrolling=False)
 
         # st.download_button(
